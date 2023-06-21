@@ -1,0 +1,29 @@
+[package]
+name = "tachyon"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "tachyon"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+solana-program = "=1.14.17"
+anchor-lang = { version = "0.27.0", features = ["init-if-needed"] }
+bytemuck = { version = "1.4.0", features = ["derive", "min_const_generics"]}
+
+num-traits = "0.2"
+num-derive = "0.3"
+thiserror = "1.0"
+num-integer = "0.1.44"
+borsh = "0.9.1"
+rust_decimal = { version = "=1.29.1", features = ["maths"] }
+
