@@ -1,8 +1,7 @@
 import type {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {Tachyon as TachyonIDLType} from '../idl';
 import {getFunctionsAddr} from "../utils";
-import {Keypair, PublicKey} from "@solana/web3.js";
-import {getFunctions} from "../state/functions";
+import {PublicKey} from "@solana/web3.js";
 
 export const funcEval = async (
     program: Program<TachyonIDLType>,

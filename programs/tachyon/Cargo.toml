@@ -16,8 +16,8 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
-solana-program = "=1.14.17"
 anchor-lang = { version = "0.27.0", features = ["init-if-needed"] }
+solana-program = "=1.14.17"
 bytemuck = { version = "1.4.0", features = ["derive", "min_const_generics"]}
 
 num-traits = "0.2"
@@ -27,3 +27,4 @@ num-integer = "0.1.44"
 borsh = "0.9.1"
 rust_decimal = { version = "=1.29.1", features = ["maths"] }
 
+fast-math = "0.1"

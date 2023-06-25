@@ -16,7 +16,7 @@ pub mod functions;
 pub mod instructions;
 pub mod state;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ");
 
 #[program]
 pub mod tachyon {

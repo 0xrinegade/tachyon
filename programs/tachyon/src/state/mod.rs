@@ -9,7 +9,7 @@ pub use functions::*;
 pub mod function_data;
 pub mod functions;
 
-pub const NUM_VALUES: usize = 20; // 100_000; // (1_000_000 brings the account size to about 16MB > 10MB)
+pub const NUM_VALUES: usize = 100; // 100_000; // (1_000_000 brings the account size to about 16MB > 10MB)
 
 pub const FUNCTIONS_SEED: &[u8] = b"functions";
 

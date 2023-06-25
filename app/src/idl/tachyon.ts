@@ -501,7 +501,7 @@ export type Tachyon = {
                     16
                   ]
                 },
-                20
+                100
               ]
             }
           },
@@ -510,7 +510,7 @@ export type Tachyon = {
             "type": {
               "array": [
                 "u8",
-                20
+                100
               ]
             }
           },
@@ -1216,7 +1216,7 @@ export const IDL: Tachyon = {
                     16
                   ]
                 },
-                20
+                100
               ]
             }
           },
@@ -1225,7 +1225,7 @@ export const IDL: Tachyon = {
             "type": {
               "array": [
                 "u8",
-                20
+                100
               ]
             }
           },

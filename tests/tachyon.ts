@@ -8,7 +8,7 @@ describe("tachyon", () => {
     const provider = anchor.AnchorProvider.local();
     anchor.setProvider(provider);
 
-    const tachyonClient = new TachyonClient(provider, new PublicKey("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"))
+    const tachyonClient = new TachyonClient(provider, new PublicKey("tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ"))
 
     it("initialize", async () => {
         await txHandler(() => tachyonClient.initialize())
@@ -62,7 +62,7 @@ describe("tachyon", () => {
         await txHandler(() => tachyonClient.initErf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
     })
 
-    const numLoads = 2
+    const numLoads = 10
 
     it("loadExp", async () => {
         for (const x of [...Array(numLoads).keys()]) {
@@ -181,7 +181,7 @@ describe("tachyon", () => {
 });
 
 export async function txHandler(handler: Function){
-    // await sleep(400)
+    await sleep(400)
 
     try {
         await handler()
