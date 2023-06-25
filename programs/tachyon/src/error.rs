@@ -20,6 +20,12 @@ pub enum ErrorCode {
     EmptyData,
     #[msg("Missing function implementation")]
     MissingImplementation,
+    #[msg("Invalid index for X value")]
+    InvalidIndex,
+    #[msg("Invalid Y value for X value")]
+    InvalidValue,
+    #[msg("The data at this index has already been loaded")]
+    DataAtIndexAlreadyLoaded,
 }
 
 #[macro_export]

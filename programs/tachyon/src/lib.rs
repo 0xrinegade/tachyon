@@ -7,6 +7,7 @@ use crate::calculator::*;
 use crate::error::*;
 use crate::functions::*;
 use crate::instructions::*;
+use crate::math::*;
 use crate::state::*;
 
 pub mod accessors;
@@ -14,6 +15,7 @@ pub mod calculator;
 pub mod error;
 pub mod functions;
 pub mod instructions;
+pub mod math;
 pub mod state;
 
 declare_id!("tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ");
@@ -26,8 +28,8 @@ pub mod tachyon {
         initialize::handler(ctx)
     }
 
-    pub fn func_load(ctx: Context<FuncLoad<FunctionData>>) -> Result<()> {
-        FuncLoad::handler(ctx)
+    pub fn func_load(ctx: Context<FuncLoad<FunctionData>>, index: u32, x_in: [u8; 16], y_in: [u8; 16]) -> Result<()> {
+        FuncLoad::handler(ctx, index, x_in, y_in)
     }
 
     pub fn func_eval(ctx: Context<FuncEval<FunctionData>>, x_raw: [u8; 16]) -> Result<([u8; 16], u8)> {

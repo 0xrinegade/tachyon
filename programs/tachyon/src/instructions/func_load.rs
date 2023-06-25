@@ -1,7 +1,7 @@
-use crate::FunctionDataAccessors;
+use crate::{FunctionDataAccessors, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
 use anchor_lang::ZeroCopy;
-use rust_decimal::MathematicalOps;
+use rust_decimal::{Decimal, MathematicalOps};
 use std::cell::RefMut;
 
 use crate::error::ErrorCode;
@@ -23,18 +23,24 @@ pub struct FuncLoad<'info, T: ZeroCopy + Owner + FunctionDataAccessors> {
 }
 
 impl<T: ZeroCopy + Owner + FunctionDataAccessors> FuncLoad<'_, T> {
-    pub fn handler(ctx: Context<FuncLoad<T>>) -> Result<()> {
+    pub fn handler(ctx: Context<FuncLoad<T>>, index_in: u32, x_in_raw: [u8; 16], y_in_raw: [u8; 16]) -> Result<()> {
         let mut f = ctx.accounts.f.load_mut()?;
 
-        for _ in 0..10 {
-            let index = f.get_next_index();
-            let x = f.get_x_from_index(index)?;
+        let x_in = Decimal::deserialize(x_in_raw);
+        let y_in = Decimal::deserialize(y_in_raw);
 
-            let (y, code) = f.eval_load(x)?;
-            f.set_value(index, y.serialize(), code as u8)?;
-
-            f.increment_next_index()?;
+        // verify that the index corresponds to the value of x
+        let x = f.get_x_from_index(index_in)?;
+        let x_diff = (x - x_in).abs();
+        if x_diff > LOAD_ERROR_TOLERANCE {
+            return err!(ErrorCode::InvalidIndex);
         }
+
+        // verify (approximately) that f(x) = y, and use the return value as the load input (to load any edge cases re: truncation)
+        let (y, code) = f.eval_load(x_in, y_in)?;
+        f.set_value(index_in, y.serialize(), code as u8)?;
+
+        f.increment_num_values_loaded()?;
 
         Ok(())
     }

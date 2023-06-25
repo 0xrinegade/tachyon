@@ -14,12 +14,15 @@ import {
     initNormPdf,
     initSin,
 } from "./rpc";
-import {getFunctions} from "./state/functions";
+import {getFunctions} from "./state";
+import {getFunctionData} from "./state/functionData";
+import {FunctionData} from "./types";
+import {rustDecimalBytesToDecimalJs} from "./utils";
+import {Decimal} from "decimal.js";
 
 export class TachyonClient {
     public readonly provider: AnchorProvider;
     public readonly program: Program<TachyonIDLType>;
-    public readonly lut: PublicKey;
 
     constructor(
         provider: AnchorProvider,
@@ -27,7 +30,6 @@ export class TachyonClient {
     ) {
         this.provider = provider;
         this.program = new Program<TachyonIDLType>(IDL, programId, provider);
-        this.lut = PublicKey.default // TODO
     }
 
     async initialize() {
@@ -109,69 +111,94 @@ export class TachyonClient {
         )
     }
 
-    private async loadFunction(f: PublicKey) {
-        return funcLoad(
-            this.program,
-            this.provider,
-            f
-        )
+    private async loadFunction(fData: PublicKey, fun: (d: Decimal) => Decimal) {
+        const [functionData] = await getFunctionData(this.program, fData);
+
+        const domainStart = rustDecimalBytesToDecimalJs(new Uint8Array(functionData.domainStart))
+        const domainEnd = rustDecimalBytesToDecimalJs(new Uint8Array(functionData.domainEnd))
+
+        const numValues = new Decimal(functionData.numValues)
+
+        return await Promise.all([...Array(numValues.toNumber()).keys()].map(async (index_num) => {
+            const index = new Decimal(index_num)
+            const x = (index.div(numValues)).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / num_values) * (domainEnd - domainStart) + domainStart
+            let y = fun(x)
+
+            if (!y.isFinite()){
+                y = new Decimal(0)
+            }
+
+            await funcLoad(
+                this.program,
+                this.provider,
+                fData,
+                index_num,
+                x,
+                y
+            )
+        }))
     }
 
     async loadExp() {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
-            functions.exp
+            functions.exp,
+            (d: Decimal) => d.exp()
         )
     }
 
     async loadLn() {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
-            functions.ln
+            functions.ln,
+            (d: Decimal) => d.ln()
         )
     }
 
     async loadLog10() {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
-            functions.log10
+            functions.log10,
+            (d: Decimal) => d.log() // default is base 10 for Decimal.js
         )
     }
 
     async loadSin() {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
-            functions.sin
+            functions.sin,
+            (d: Decimal) => d.sin()
         )
     }
 
     async loadCos() {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
-            functions.cos
+            functions.cos,
+            (d: Decimal) => d.cos()
         )
     }
 
-    async loadNormCdf() {
-        const [functions] = await getFunctions(this.program);
-        return this.loadFunction(
-            functions.normPdf
-        )
-    }
-
-    async loadNormPdf() {
-        const [functions] = await getFunctions(this.program);
-        return this.loadFunction(
-            functions.normCdf
-        )
-    }
-
-    async loadErf() {
-        const [functions] = await getFunctions(this.program);
-        return this.loadFunction(
-            functions.erf
-        )
-    }
+    // async loadNormCdf() {
+    //     const [functions] = await getFunctions(this.program);
+    //     return this.loadFunction(
+    //         functions.normPdf
+    //     )
+    // }
+    //
+    // async loadNormPdf() {
+    //     const [functions] = await getFunctions(this.program);
+    //     return this.loadFunction(
+    //         functions.normCdf
+    //     )
+    // }
+    //
+    // async loadErf() {
+    //     const [functions] = await getFunctions(this.program);
+    //     return this.loadFunction(
+    //         functions.erf
+    //     )
+    // }
 
 
     private async evaluateFunction(f: PublicKey, x: number[]) {

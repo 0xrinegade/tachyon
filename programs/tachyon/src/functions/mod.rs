@@ -1,4 +1,5 @@
 use crate::FunctionType;
+use rust_decimal::Decimal;
 
 pub use cos::*;
 pub use erf::*;
@@ -19,3 +20,6 @@ pub mod log10;
 pub mod norm_cdf;
 pub mod norm_pdf;
 pub mod sin;
+
+pub const LOAD_ERROR_TOLERANCE: Decimal = ONE_BILLIONTH;
+pub const ONE_BILLIONTH: Decimal = Decimal::from_parts(1, 0, 0, false, 9);

@@ -1,4 +1,4 @@
-use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode};
+use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
 use num_traits::{Inv, One};
 use rust_decimal::{Decimal, MathematicalOps};
@@ -10,8 +10,14 @@ pub struct NormPdf {}
 impl FunctionLogic for NormPdf {
     const FUNCTION_TYPE: FunctionType = FunctionType::NormPdf;
 
-    fn eval_load(x: Decimal) -> Result<(Decimal, ValueCode)> {
-        Ok((x.norm_pdf(), ValueCode::Valid))
+    fn validate_load(x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)> {
+        let diff = Self::proportion_difference(y_in, x_in.norm_pdf())?;
+
+        if diff > LOAD_ERROR_TOLERANCE {
+            return err!(ErrorCode::InvalidValue);
+        }
+
+        Ok((y_in, ValueCode::Valid))
     }
 
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {

@@ -15,7 +15,8 @@ pub struct FunctionData {
     pub interval: [u8; 16],
     pub values: [[u8; 16]; NUM_VALUES],
     pub value_codes: [u8; NUM_VALUES],
-    pub next_index: u32,
+    pub num_values: u32,
+    pub num_values_loaded: u32,
     pub function_type: u32,
 }
 
@@ -36,18 +37,18 @@ impl FunctionDataAccessors for FunctionData {
         }
     }
 
-    fn eval_load(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
+    fn eval_load(&self, x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)> {
         let function_type = FunctionType::try_from(self.function_type).unwrap();
 
         match function_type {
-            FunctionType::Exp => Exp::eval_load(x),
-            FunctionType::Ln => Ln::eval_load(x),
-            FunctionType::Log10 => Log10::eval_load(x),
-            FunctionType::Sin => Sin::eval_load(x),
-            FunctionType::Cos => Cos::eval_load(x),
-            FunctionType::NormPdf => NormPdf::eval_load(x),
-            FunctionType::NormCdf => NormCdf::eval_load(x),
-            FunctionType::Erf => Erf::eval_load(x),
+            FunctionType::Exp => Exp::validate_load(x_in, y_in),
+            FunctionType::Ln => Ln::validate_load(x_in, y_in),
+            FunctionType::Log10 => Log10::validate_load(x_in, y_in),
+            FunctionType::Sin => Sin::validate_load(x_in, y_in),
+            FunctionType::Cos => Cos::validate_load(x_in, y_in),
+            FunctionType::NormPdf => NormPdf::validate_load(x_in, y_in),
+            FunctionType::NormCdf => NormCdf::validate_load(x_in, y_in),
+            FunctionType::Erf => Erf::validate_load(x_in, y_in),
             _ => err!(ErrorCode::MissingImplementation),
         }
     }
@@ -107,12 +108,12 @@ impl FunctionDataAccessors for FunctionData {
         Ok(())
     }
 
-    fn get_next_index(&self) -> u32 {
-        self.next_index
+    fn get_num_values_loaded(&self) -> u32 {
+        self.num_values_loaded
     }
 
-    fn set_next_index(&mut self, new_index: u32) -> Result<()> {
-        self.next_index = new_index;
+    fn increment_num_values_loaded(&mut self) -> Result<()> {
+        self.num_values_loaded += 1u32;
         Ok(())
     }
 
@@ -122,6 +123,16 @@ impl FunctionDataAccessors for FunctionData {
 
     fn set_initialized_true(&mut self) -> Result<()> {
         self.initialized = 1u32;
+        Ok(())
+    }
+
+    fn get_num_values(&self) -> Result<Decimal> {
+        let num_values = Decimal::from_u32(self.num_values).unwrap();
+        Ok(num_values)
+    }
+
+    fn set_num_values(&mut self, num_values: u32) -> Result<()> {
+        self.num_values = num_values;
         Ok(())
     }
 }

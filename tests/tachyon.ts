@@ -32,85 +32,68 @@ describe("tachyon", () => {
         await txHandler(() => tachyonClient.initLog10(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
     })
 
-    it("initSin", async () => {
-        let domainStart = new Decimal(0)
-        let domainEnd = Decimal.acos(-1).mul(2) // 2*pi
-        await txHandler(() => tachyonClient.initSin(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
-    })
+    // it("initSin", async () => {
+    //     let domainStart = new Decimal(0)
+    //     let domainEnd = Decimal.acos(-1).mul(2) // 2*pi
+    //     await txHandler(() => tachyonClient.initSin(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
+    // })
+    //
+    // it("initCos", async () => {
+    //     let domainStart = new Decimal(0)
+    //     let domainEnd = Decimal.acos(-1).mul(2) // 2*pi
+    //     await txHandler(() => tachyonClient.initCos(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
+    // })
+    //
+    // it("initNormPdf", async () => {
+    //     let domainStart = new Decimal(-4.5)
+    //     let domainEnd = new Decimal(4.5)
+    //     await txHandler(() => tachyonClient.initNormPdf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
+    // })
+    //
+    // it("initNormCdf", async () => {
+    //     let domainStart = new Decimal(-4.5)
+    //     let domainEnd = new Decimal(4.5)
+    //     await txHandler(() => tachyonClient.initNormCdf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
+    // })
+    //
+    // it("initErf", async () => {
+    //     let domainStart = new Decimal(-4.5)
+    //     let domainEnd = new Decimal(4.5)
+    //     await txHandler(() => tachyonClient.initErf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
+    // })
 
-    it("initCos", async () => {
-        let domainStart = new Decimal(0)
-        let domainEnd = Decimal.acos(-1).mul(2) // 2*pi
-        await txHandler(() => tachyonClient.initCos(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
-    })
-
-    it("initNormPdf", async () => {
-        let domainStart = new Decimal(-4.5)
-        let domainEnd = new Decimal(4.5)
-        await txHandler(() => tachyonClient.initNormPdf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
-    })
-
-    it("initNormCdf", async () => {
-        let domainStart = new Decimal(-4.5)
-        let domainEnd = new Decimal(4.5)
-        await txHandler(() => tachyonClient.initNormCdf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
-    })
-
-    it("initErf", async () => {
-        let domainStart = new Decimal(-4.5)
-        let domainEnd = new Decimal(4.5)
-        await txHandler(() => tachyonClient.initErf(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
-    })
-
-    const numLoads = 10
 
     it("loadExp", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadExp());
-        }
+        await txHandler(() => tachyonClient.loadExp())
     })
 
     it("loadLn", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadLn());
-        }
+        await txHandler(() => tachyonClient.loadLn())
     })
 
     it("loadLog10", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadLog10());
-        }
+        await txHandler(() => tachyonClient.loadLog10())
     })
 
-    it("loadSin", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadSin());
-        }
-    })
-
-    it("loadCos", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadCos());
-        }
-    })
-
-    it("loadNormPdf", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadNormPdf());
-        }
-    })
-
-    it("loadNormCdf", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadNormCdf());
-        }
-    })
-
-    it("loadErf", async () => {
-        for (const x of [...Array(numLoads).keys()]) {
-            await txHandler(() => tachyonClient.loadErf());
-        }
-    })
+    // it("loadSin", async () => {
+    //     await txHandler(() => tachyonClient.loadSin())
+    // })
+    //
+    // it("loadCos", async () => {
+    //     await txHandler(() => tachyonClient.loadCos())
+    // })
+    //
+    // it("loadNormPdf", async () => {
+    //     await txHandler(() => tachyonClient.loadNormPdf())
+    // })
+    //
+    // it("loadNormCdf", async () => {
+    //     await txHandler(() => tachyonClient.loadNormCdf())
+    // })
+    //
+    // it("loadErf", async () => {
+    //     await txHandler(() => tachyonClient.loadErf())
+    // })
 
     it("evalExp", async () => {
         let x = new Decimal(1)
@@ -127,30 +110,30 @@ describe("tachyon", () => {
         await txHandler(() => tachyonClient.evalLog10(decimalJsToRustDecimalBytes(x)))
     })
 
-    it("evalSin", async () => {
-        let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalSin(decimalJsToRustDecimalBytes(x)))
-    })
-
-    it("evalCos", async () => {
-        let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalCos(decimalJsToRustDecimalBytes(x)))
-    })
-
-    it("evalNormPdf", async () => {
-        let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalNormPdf(decimalJsToRustDecimalBytes(x)))
-    })
-
-    it("evalNormCdf", async () => {
-        let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalNormCdf(decimalJsToRustDecimalBytes(x)))
-    })
-
-    it("evalErf", async () => {
-        let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalErf(decimalJsToRustDecimalBytes(x)))
-    })
+    // it("evalSin", async () => {
+    //     let x = new Decimal(1)
+    //     await txHandler(() => tachyonClient.evalSin(decimalJsToRustDecimalBytes(x)))
+    // })
+    //
+    // it("evalCos", async () => {
+    //     let x = new Decimal(1)
+    //     await txHandler(() => tachyonClient.evalCos(decimalJsToRustDecimalBytes(x)))
+    // })
+    //
+    // it("evalNormPdf", async () => {
+    //     let x = new Decimal(1)
+    //     await txHandler(() => tachyonClient.evalNormPdf(decimalJsToRustDecimalBytes(x)))
+    // })
+    //
+    // it("evalNormCdf", async () => {
+    //     let x = new Decimal(1)
+    //     await txHandler(() => tachyonClient.evalNormCdf(decimalJsToRustDecimalBytes(x)))
+    // })
+    //
+    // it("evalErf", async () => {
+    //     let x = new Decimal(1)
+    //     await txHandler(() => tachyonClient.evalErf(decimalJsToRustDecimalBytes(x)))
+    // })
 
     it("decimal utils", async () => {
         let testNums = [

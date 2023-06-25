@@ -26,7 +26,7 @@ impl<T: ZeroCopy + Owner + FunctionDataAccessors> FuncEval<'_, T> {
     pub fn handler(ctx: Context<FuncEval<T>>, x_raw: [u8; 16]) -> Result<([u8; 16], u8)> {
         let f = ctx.accounts.f.load()?;
 
-        if f.get_next_index() != NUM_VALUES as u32 {
+        if f.get_num_values_loaded() != NUM_VALUES as u32 {
             return err!(ErrorCode::IncompleteDataLoading);
         }
 

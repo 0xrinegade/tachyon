@@ -52,7 +52,30 @@ export type Tachyon = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "xIn",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "yIn",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "funcEval",
@@ -515,7 +538,11 @@ export type Tachyon = {
             }
           },
           {
-            "name": "nextIndex",
+            "name": "numValues",
+            "type": "u32"
+          },
+          {
+            "name": "numValuesLoaded",
             "type": "u32"
           },
           {
@@ -709,6 +736,21 @@ export type Tachyon = {
       "code": 6008,
       "name": "MissingImplementation",
       "msg": "Missing function implementation"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidIndex",
+      "msg": "Invalid index for X value"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidValue",
+      "msg": "Invalid Y value for X value"
+    },
+    {
+      "code": 6011,
+      "name": "DataAtIndexAlreadyLoaded",
+      "msg": "The data at this index has already been loaded"
     }
   ]
 };
@@ -767,7 +809,30 @@ export const IDL: Tachyon = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "index",
+          "type": "u32"
+        },
+        {
+          "name": "xIn",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "yIn",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "funcEval",
@@ -1230,7 +1295,11 @@ export const IDL: Tachyon = {
             }
           },
           {
-            "name": "nextIndex",
+            "name": "numValues",
+            "type": "u32"
+          },
+          {
+            "name": "numValuesLoaded",
             "type": "u32"
           },
           {
@@ -1424,6 +1493,21 @@ export const IDL: Tachyon = {
       "code": 6008,
       "name": "MissingImplementation",
       "msg": "Missing function implementation"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidIndex",
+      "msg": "Invalid index for X value"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidValue",
+      "msg": "Invalid Y value for X value"
+    },
+    {
+      "code": 6011,
+      "name": "DataAtIndexAlreadyLoaded",
+      "msg": "The data at this index has already been loaded"
     }
   ]
 };

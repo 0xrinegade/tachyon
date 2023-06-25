@@ -1,4 +1,4 @@
-use crate::{FuncInit, FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, NUM_VALUES};
+use crate::{FuncInit, FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE, NUM_VALUES};
 use anchor_lang::prelude::*;
 use anchor_lang::ZeroCopy;
 use fast_math::exp;
@@ -12,10 +12,17 @@ pub struct Exp {}
 impl FunctionLogic for Exp {
     const FUNCTION_TYPE: FunctionType = FunctionType::Exp;
 
-    fn eval_load(x: Decimal) -> Result<(Decimal, ValueCode)> {
-        let y = Decimal::from_f32(exp(x.to_f32().unwrap())).unwrap();
+    fn validate_load(x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)> {
+        // it's easier to calculate an accurate ln(x) than an accurate exp(x), so compare x to ln(y) instead of y to exp(x)
+        // this would result in higher error tolerance, but is an acceptable tradeoff, since the difficulty in calculating an accurate exp(x) on-chain is the reason for taking pre-calculated off-chain inputs as arguments
+        // this on-chain verification is primarily to catch any bugs/index mix-up in the off-chain loading code
+        let diff = Self::proportion_difference(x_in, y_in.ln())?;
 
-        Ok((y, ValueCode::Valid))
+        if diff > LOAD_ERROR_TOLERANCE {
+            return err!(ErrorCode::InvalidValue);
+        }
+
+        Ok((y_in, ValueCode::Valid))
     }
 
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {

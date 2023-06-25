@@ -72,12 +72,8 @@ impl<'a> TachyonCalculator<'a> {
     pub fn pow(&self, x: Decimal, power: Decimal) -> Result<(Decimal, ValueCode)> {
         let (ln_y, ln_value_code) = self.ln(x)?;
 
-        // msg!("ln({:?})={:?}", x, ln_y);
-
         let exp_x = power.checked_mul(ln_y).unwrap();
         let (exp_y, exp_value_code) = self.exp(exp_x)?;
-
-        // msg!("exp({:?})={:?}", exp_x, exp_y);
 
         let return_value_code = reduce_value_codes(Vec::from([ln_value_code as u8, exp_value_code as u8]));
 

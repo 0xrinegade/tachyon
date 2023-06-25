@@ -34,13 +34,15 @@ impl<T: ZeroCopy + Owner + FunctionDataAccessors> FuncInit<'_, T> {
         let domain_start = Decimal::deserialize(domain_start_raw);
         let domain_end = Decimal::deserialize(domain_end_raw);
 
-        let num_values = Decimal::from_usize(NUM_VALUES).unwrap();
-        let interval = (domain_end - domain_start) / num_values;
-
         f.set_domain_start(domain_start_raw)?;
         f.set_domain_end(domain_end_raw)?;
 
+        let num_values = Decimal::from_usize(NUM_VALUES).unwrap();
+        let interval = (domain_end - domain_start) / num_values;
+
+        f.set_num_values(NUM_VALUES as u32)?;
         f.set_interval(interval.serialize())?;
+
         f.set_function_type(ft)?;
 
         Ok(())
