@@ -62,7 +62,7 @@ pub trait FunctionDataAccessors {
 
     fn get_x_from_index(&self, index: u32) -> Result<Decimal> {
         let index_prop = Decimal::from_u32(index).unwrap() / self.get_num_values()?;
-        let x = index_prop * self.get_interval()? + self.get_domain_start()?;
+        let x = index_prop * self.get_domain()? + self.get_domain_start()?;
         Ok(x)
     }
 
