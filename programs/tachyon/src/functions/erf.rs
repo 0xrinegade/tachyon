@@ -17,11 +17,6 @@ impl FunctionLogic for Erf {
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
         let mut x = x;
 
-        // erf(0) = 0, so just return 0
-        if x.is_zero() {
-            return Ok((Decimal::ZERO, ValueCode::Valid));
-        }
-
         // grab the domain start and end
         let domain_start = fd.get_domain_start()?;
         let domain_end = fd.get_domain_end()?;

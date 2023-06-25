@@ -21,14 +21,6 @@ impl FunctionLogic for Ln {
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
         let mut x = x;
 
-        if x.is_sign_negative() {
-            return err!(ErrorCode::OutOfDomainBounds);
-        }
-
-        if x.is_one() {
-            return Ok((Decimal::ZERO, ValueCode::Valid));
-        }
-
         // grab the domain start and end
         let domain_start = fd.get_domain_start()?;
         let domain_end = fd.get_domain_end()?;

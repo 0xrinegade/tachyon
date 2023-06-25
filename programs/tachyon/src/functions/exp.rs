@@ -1,7 +1,8 @@
 use crate::{FuncInit, FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, NUM_VALUES};
 use anchor_lang::prelude::*;
 use anchor_lang::ZeroCopy;
-use num_traits::{FromPrimitive, Inv};
+use fast_math::exp;
+use num_traits::{FromPrimitive, Inv, ToPrimitive};
 use rust_decimal::{Decimal, MathematicalOps};
 
 use crate::error::ErrorCode;
@@ -12,16 +13,13 @@ impl FunctionLogic for Exp {
     const FUNCTION_TYPE: FunctionType = FunctionType::Exp;
 
     fn eval_load(x: Decimal) -> Result<(Decimal, ValueCode)> {
-        Ok((x.exp(), ValueCode::Valid))
+        let y = Decimal::from_f32(exp(x.to_f32().unwrap())).unwrap();
+
+        Ok((y, ValueCode::Valid))
     }
 
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
         let mut x = x;
-
-        // e^0 = 1, so just return 1
-        if x.is_zero() {
-            return Ok((Decimal::ONE, ValueCode::Valid));
-        }
 
         // e^-x = 1/e^x, so only cover positive values of x and invert if necessary
         let is_negative = x.is_sign_negative();

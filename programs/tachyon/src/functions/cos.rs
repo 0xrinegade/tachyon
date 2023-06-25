@@ -18,11 +18,6 @@ impl FunctionLogic for Cos {
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
         let mut x = x;
 
-        // cos(0)=1, so just return 1
-        if x.is_zero() {
-            return Ok((Decimal::ONE, ValueCode::Valid));
-        }
-
         x = x.rem(Decimal::TWO_PI);
 
         // grab the domain start and end

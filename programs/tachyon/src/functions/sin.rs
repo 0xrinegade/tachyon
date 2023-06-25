@@ -18,11 +18,6 @@ impl FunctionLogic for Sin {
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
         let mut x = x;
 
-        // sin(0)=0, so just return 0
-        if x.is_zero() {
-            return Ok((Decimal::ZERO, ValueCode::Valid));
-        }
-
         x = x.rem(Decimal::TWO_PI);
 
         // grab the domain start and end
