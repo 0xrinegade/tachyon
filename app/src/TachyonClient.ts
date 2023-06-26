@@ -4,8 +4,10 @@ import {IDL, Tachyon as TachyonIDLType} from './idl';
 import {funcEval, funcLoad, initCos, initExp, initialize, initLn, initLog10, initSin,} from "./rpc";
 import {getFunctions} from "./state";
 import {getFunctionData} from "./state/functionData";
-import {rustDecimalBytesToDecimalJs} from "./utils";
+import {chunk, rustDecimalBytesToDecimalJs, sleep} from "./utils";
 import {Decimal} from "decimal.js";
+
+const DEFAULT_CHUNK_SIZE = 100;
 
 export class TachyonClient {
     public readonly provider: AnchorProvider;
@@ -73,71 +75,96 @@ export class TachyonClient {
         )
     }
 
-    private async loadFunction(fData: PublicKey, fun: (d: Decimal) => Decimal) {
-        const [functionData] = await getFunctionData(this.program, fData);
+    private async loadFunction(fData: PublicKey, fun: (d: Decimal) => Decimal, chunkSize) {
+        let [functionData] = await getFunctionData(this.program, fData);
 
         const domainStart = rustDecimalBytesToDecimalJs(new Uint8Array(functionData.domainStart))
         const domainEnd = rustDecimalBytesToDecimalJs(new Uint8Array(functionData.domainEnd))
 
         const numValues = new Decimal(functionData.numValues)
 
-        return await Promise.all([...Array(numValues.toNumber()).keys()].map(async (index_num) => {
-            const index = new Decimal(index_num)
-            const x = (index.div(numValues)).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / num_values) * (domainEnd - domainStart) + domainStart
-            let y = fun(x)
+        let emptyIndices = [...Array(numValues.toNumber()).keys()].filter((i) => {
+            return functionData.valueCodes[i] == 0
+        })
 
-            if (!y.isFinite()){
-                y = new Decimal(0)
+        while (emptyIndices.length > 0){
+            console.log(emptyIndices.length, "values remaining to load..")
+
+            for (let indices of chunk(emptyIndices, chunkSize)){
+                console.log("\t #", indices[0])
+
+                await Promise.all(indices.map(async (index_num) => {
+                    const index = new Decimal(index_num)
+                    const x = (index.div(numValues)).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / num_values) * (domainEnd - domainStart) + domainStart
+                    let y = fun(x)
+
+                    if (!y.isFinite()){
+                        y = new Decimal(0)
+                    }
+
+                    await funcLoad(
+                        this.program,
+                        this.provider,
+                        fData,
+                        index_num,
+                        x,
+                        y
+                    )
+                }))
             }
 
-            await funcLoad(
-                this.program,
-                this.provider,
-                fData,
-                index_num,
-                x,
-                y
-            )
-        }))
+            await sleep(500)
+
+            functionData = (await getFunctionData(this.program, fData))[0];
+
+            emptyIndices = [...Array(numValues.toNumber()).keys()].filter((i) => {
+                return functionData.valueCodes[i] == 0
+            })
+        }
     }
 
-    async loadExp() {
+    async loadExp(chunkSize = DEFAULT_CHUNK_SIZE) {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
             functions.exp,
-            (d: Decimal) => d.exp()
+            (d: Decimal) => d.exp(),
+            chunkSize
         )
     }
 
-    async loadLn() {
+    async loadLn(chunkSize = DEFAULT_CHUNK_SIZE) {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
             functions.ln,
-            (d: Decimal) => d.ln()
+            (d: Decimal) => d.ln(),
+            chunkSize
         )
     }
 
-    async loadLog10() {
+    async loadLog10(chunkSize = DEFAULT_CHUNK_SIZE) {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
             functions.log10,
-            (d: Decimal) => d.log() // default is base 10 for Decimal.js
+            (d: Decimal) => d.log(), // default is base 10 for Decimal.js
+            chunkSize
         )
     }
 
-    async loadSin() {
+    async loadSin(chunkSize = DEFAULT_CHUNK_SIZE) {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
             functions.sin,
-            (d: Decimal) => d.sin()
+            (d: Decimal) => d.sin(),
+            chunkSize
         )
     }
 
-    async loadCos() {
+    async loadCos(chunkSize = DEFAULT_CHUNK_SIZE) {
         const [functions] = await getFunctions(this.program);
         return this.loadFunction(
             functions.cos,
-            (d: Decimal) => d.cos()
+            (d: Decimal) => d.cos(),
+            chunkSize
         )
     }
 
