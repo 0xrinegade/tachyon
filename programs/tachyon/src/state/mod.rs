@@ -22,9 +22,6 @@ pub enum FunctionType {
     Log10 = 3,
     Sin = 4,
     Cos = 5,
-    NormPdf = 6,
-    NormCdf = 7,
-    Erf = 8,
 }
 
 impl TryFrom<u32> for FunctionType {
@@ -38,9 +35,6 @@ impl TryFrom<u32> for FunctionType {
             x if x == FunctionType::Log10 as u32 => Ok(FunctionType::Log10),
             x if x == FunctionType::Sin as u32 => Ok(FunctionType::Sin),
             x if x == FunctionType::Cos as u32 => Ok(FunctionType::Cos),
-            x if x == FunctionType::NormPdf as u32 => Ok(FunctionType::NormPdf),
-            x if x == FunctionType::NormCdf as u32 => Ok(FunctionType::NormCdf),
-            x if x == FunctionType::Erf as u32 => Ok(FunctionType::Erf),
             _ => Err(()),
         }
     }

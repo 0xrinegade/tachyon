@@ -1,22 +1,9 @@
 import {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {PublicKey} from "@solana/web3.js";
 import {IDL, Tachyon as TachyonIDLType} from './idl';
-import {
-    funcEval,
-    funcLoad,
-    initCos,
-    initErf,
-    initExp,
-    initialize,
-    initLn,
-    initLog10,
-    initNormCdf,
-    initNormPdf,
-    initSin,
-} from "./rpc";
+import {funcEval, funcLoad, initCos, initExp, initialize, initLn, initLog10, initSin,} from "./rpc";
 import {getFunctions} from "./state";
 import {getFunctionData} from "./state/functionData";
-import {FunctionData} from "./types";
 import {rustDecimalBytesToDecimalJs} from "./utils";
 import {Decimal} from "decimal.js";
 
@@ -30,6 +17,8 @@ export class TachyonClient {
     ) {
         this.provider = provider;
         this.program = new Program<TachyonIDLType>(IDL, programId, provider);
+
+        Decimal.set({ precision: 28 })
     }
 
     async initialize() {
@@ -77,33 +66,6 @@ export class TachyonClient {
 
     async initCos(domainStart: number[], domainEnd: number[]) {
         return initCos(
-            this.program,
-            this.provider,
-            domainStart,
-            domainEnd,
-        )
-    }
-
-    async initNormPdf(domainStart: number[], domainEnd: number[]) {
-        return initNormPdf(
-            this.program,
-            this.provider,
-            domainStart,
-            domainEnd,
-        )
-    }
-
-    async initNormCdf(domainStart: number[], domainEnd: number[]) {
-        return initNormCdf(
-            this.program,
-            this.provider,
-            domainStart,
-            domainEnd,
-        )
-    }
-
-    async initErf(domainStart: number[], domainEnd: number[]) {
-        return initErf(
             this.program,
             this.provider,
             domainStart,
@@ -179,28 +141,6 @@ export class TachyonClient {
         )
     }
 
-    // async loadNormCdf() {
-    //     const [functions] = await getFunctions(this.program);
-    //     return this.loadFunction(
-    //         functions.normPdf
-    //     )
-    // }
-    //
-    // async loadNormPdf() {
-    //     const [functions] = await getFunctions(this.program);
-    //     return this.loadFunction(
-    //         functions.normCdf
-    //     )
-    // }
-    //
-    // async loadErf() {
-    //     const [functions] = await getFunctions(this.program);
-    //     return this.loadFunction(
-    //         functions.erf
-    //     )
-    // }
-
-
     private async evaluateFunction(f: PublicKey, x: number[]) {
         return funcEval(
             this.program,
@@ -246,30 +186,6 @@ export class TachyonClient {
         const [functions] = await getFunctions(this.program);
         return this.evaluateFunction(
             functions.cos,
-            x
-        )
-    }
-
-    async evalNormPdf(x: number[]) {
-        const [functions] = await getFunctions(this.program);
-        return this.evaluateFunction(
-            functions.normPdf,
-            x
-        )
-    }
-
-    async evalNormCdf(x: number[]) {
-        const [functions] = await getFunctions(this.program);
-        return this.evaluateFunction(
-            functions.normCdf,
-            x
-        )
-    }
-
-    async evalErf(x: number[]) {
-        const [functions] = await getFunctions(this.program);
-        return this.evaluateFunction(
-            functions.erf,
             x
         )
     }

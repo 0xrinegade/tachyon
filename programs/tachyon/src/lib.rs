@@ -80,31 +80,4 @@ pub mod tachyon {
         }
         FuncInit::handler(ctx, domain_start_raw, domain_end_raw, FunctionType::Cos)
     }
-
-    pub fn init_norm_pdf(ctx: Context<FuncInit<FunctionData>>, domain_start_raw: [u8; 16], domain_end_raw: [u8; 16]) -> Result<()> {
-        if ctx.accounts.functions.norm_pdf == Pubkey::default() {
-            ctx.accounts.functions.norm_pdf = ctx.accounts.f.key();
-        } else {
-            return err!(ErrorCode::AccountAlreadyInitialized);
-        }
-        FuncInit::handler(ctx, domain_start_raw, domain_end_raw, FunctionType::NormPdf)
-    }
-
-    pub fn init_norm_cdf(ctx: Context<FuncInit<FunctionData>>, domain_start_raw: [u8; 16], domain_end_raw: [u8; 16]) -> Result<()> {
-        if ctx.accounts.functions.norm_cdf == Pubkey::default() {
-            ctx.accounts.functions.norm_cdf = ctx.accounts.f.key();
-        } else {
-            return err!(ErrorCode::AccountAlreadyInitialized);
-        }
-        FuncInit::handler(ctx, domain_start_raw, domain_end_raw, FunctionType::NormCdf)
-    }
-
-    pub fn init_erf(ctx: Context<FuncInit<FunctionData>>, domain_start_raw: [u8; 16], domain_end_raw: [u8; 16]) -> Result<()> {
-        if ctx.accounts.functions.erf == Pubkey::default() {
-            ctx.accounts.functions.erf = ctx.accounts.f.key();
-        } else {
-            return err!(ErrorCode::AccountAlreadyInitialized);
-        }
-        FuncInit::handler(ctx, domain_start_raw, domain_end_raw, FunctionType::Erf)
-    }
 }

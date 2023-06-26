@@ -1,5 +1,5 @@
 export type Tachyon = {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "tachyon",
   "instructions": [
     {
@@ -81,7 +81,7 @@ export type Tachyon = {
       "name": "funcEval",
       "accounts": [
         {
-          "name": "admin",
+          "name": "user",
           "isMut": true,
           "isSigner": true
         },
@@ -340,141 +340,6 @@ export type Tachyon = {
           }
         }
       ]
-    },
-    {
-      "name": "initNormPdf",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "functions",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "f",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "domainStartRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        },
-        {
-          "name": "domainEndRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "initNormCdf",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "functions",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "f",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "domainStartRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        },
-        {
-          "name": "domainEndRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "initErf",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "functions",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "f",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "domainStartRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        },
-        {
-          "name": "domainEndRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        }
-      ]
     }
   ],
   "accounts": [
@@ -524,7 +389,7 @@ export type Tachyon = {
                     16
                   ]
                 },
-                100
+                1000
               ]
             }
           },
@@ -533,7 +398,7 @@ export type Tachyon = {
             "type": {
               "array": [
                 "u8",
-                100
+                1000
               ]
             }
           },
@@ -557,6 +422,10 @@ export type Tachyon = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
           {
             "name": "initialized",
             "type": "bool"
@@ -660,15 +529,6 @@ export type Tachyon = {
           },
           {
             "name": "Cos"
-          },
-          {
-            "name": "NormPdf"
-          },
-          {
-            "name": "NormCdf"
-          },
-          {
-            "name": "Erf"
           }
         ]
       }
@@ -756,7 +616,7 @@ export type Tachyon = {
 };
 
 export const IDL: Tachyon = {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "tachyon",
   "instructions": [
     {
@@ -838,7 +698,7 @@ export const IDL: Tachyon = {
       "name": "funcEval",
       "accounts": [
         {
-          "name": "admin",
+          "name": "user",
           "isMut": true,
           "isSigner": true
         },
@@ -1097,141 +957,6 @@ export const IDL: Tachyon = {
           }
         }
       ]
-    },
-    {
-      "name": "initNormPdf",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "functions",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "f",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "domainStartRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        },
-        {
-          "name": "domainEndRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "initNormCdf",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "functions",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "f",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "domainStartRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        },
-        {
-          "name": "domainEndRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "initErf",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "functions",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "f",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "domainStartRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        },
-        {
-          "name": "domainEndRaw",
-          "type": {
-            "array": [
-              "u8",
-              16
-            ]
-          }
-        }
-      ]
     }
   ],
   "accounts": [
@@ -1281,7 +1006,7 @@ export const IDL: Tachyon = {
                     16
                   ]
                 },
-                100
+                1000
               ]
             }
           },
@@ -1290,7 +1015,7 @@ export const IDL: Tachyon = {
             "type": {
               "array": [
                 "u8",
-                100
+                1000
               ]
             }
           },
@@ -1314,6 +1039,10 @@ export const IDL: Tachyon = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
           {
             "name": "initialized",
             "type": "bool"
@@ -1417,15 +1146,6 @@ export const IDL: Tachyon = {
           },
           {
             "name": "Cos"
-          },
-          {
-            "name": "NormPdf"
-          },
-          {
-            "name": "NormCdf"
-          },
-          {
-            "name": "Erf"
           }
         ]
       }

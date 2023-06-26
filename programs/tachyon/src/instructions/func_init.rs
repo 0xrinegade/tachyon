@@ -15,6 +15,7 @@ pub struct FuncInit<'info, T: ZeroCopy + Owner + FunctionDataAccessors> {
         mut,
         seeds = [FUNCTIONS_SEED],
         bump,
+        has_one = admin
     )]
     pub functions: Account<'info, Functions>,
     #[account(zero)]

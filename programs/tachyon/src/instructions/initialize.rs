@@ -26,6 +26,7 @@ pub fn handler(ctx: Context<Initialize>) -> Result<()> {
         return err!(ErrorCode::ProgramAlreadyInitialized);
     }
 
+    ctx.accounts.functions.admin = ctx.accounts.admin.key();
     ctx.accounts.functions.initialized = true;
 
     Ok(())

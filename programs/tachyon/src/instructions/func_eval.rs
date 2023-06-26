@@ -10,7 +10,7 @@ use crate::FunctionDataAccessors;
 #[derive(Accounts)]
 pub struct FuncEval<'info, T: ZeroCopy + Owner + FunctionDataAccessors> {
     #[account(mut)]
-    pub admin: Signer<'info>,
+    pub user: Signer<'info>,
     #[account(
         mut,
         seeds = [FUNCTIONS_SEED],

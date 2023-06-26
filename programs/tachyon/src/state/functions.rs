@@ -4,6 +4,7 @@ use anchor_lang::prelude::*;
 #[account]
 #[derive(Default)]
 pub struct Functions {
+    pub admin: Pubkey,
     pub initialized: bool,
     //
     pub exp: Pubkey,

@@ -14,7 +14,7 @@ export const funcEval = async (
     return program.methods
         .funcEval(x)
         .accounts({
-            admin: provider.wallet.publicKey,
+            user: provider.wallet.publicKey,
             functions: functionsPda,
             f: f,
         })

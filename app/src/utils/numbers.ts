@@ -62,7 +62,7 @@ export function rustDecimalBytesToDecimalJs(bytes: Uint8Array): Decimal {
     return new Decimal(base.toString()).div((new Decimal(10)).pow(new Decimal(scale.toString())))
 }
 
-export function decimalJsToRustDecimal(d: Decimal): RustDecimal {
+export function decimalJsToRustDecimal(d_in: Decimal): RustDecimal {
     const getFlags = (neg: boolean, scale: bigint) => {
         let negBytes = neg ? BigInt(1) : BigInt(0)
         return (scale << SCALE_SHIFT) | (negBytes << SIGN_SHIFT)
@@ -70,6 +70,8 @@ export function decimalJsToRustDecimal(d: Decimal): RustDecimal {
 
     // don't print strings in exp notation
     Decimal.set({ toExpPos: 1000, toExpNeg: -1000 })
+
+    const d = d_in.toDecimalPlaces(28) // cut off more than 28 decimal places, since RustDecimal can't hold more than that
 
     const scale = BigInt(d.decimalPlaces())
     let numString = d.toFixed(d.decimalPlaces())

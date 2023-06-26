@@ -1,5 +1,5 @@
 use crate::state::NUM_VALUES;
-use crate::{reduce_value_codes, Cos, Erf, Exp, FunctionDataAccessors, FunctionLogic, FunctionType, Ln, Log10, NormCdf, NormPdf, Pubkey, Sin, ValueCode};
+use crate::{reduce_value_codes, Cos, Exp, FunctionDataAccessors, FunctionLogic, FunctionType, Ln, Log10, Pubkey, Sin, ValueCode};
 use anchor_lang::prelude::*;
 use num_traits::{FromPrimitive, Inv, ToPrimitive};
 use rust_decimal::{Decimal, MathematicalOps};
@@ -30,9 +30,6 @@ impl FunctionDataAccessors for FunctionData {
             FunctionType::Log10 => Log10::eval(self, x),
             FunctionType::Sin => Sin::eval(self, x),
             FunctionType::Cos => Cos::eval(self, x),
-            FunctionType::NormPdf => NormPdf::eval(self, x),
-            FunctionType::NormCdf => NormCdf::eval(self, x),
-            FunctionType::Erf => Erf::eval(self, x),
             _ => err!(ErrorCode::MissingImplementation),
         }
     }
@@ -46,9 +43,6 @@ impl FunctionDataAccessors for FunctionData {
             FunctionType::Log10 => Log10::validate_load(x_in, y_in),
             FunctionType::Sin => Sin::validate_load(x_in, y_in),
             FunctionType::Cos => Cos::validate_load(x_in, y_in),
-            FunctionType::NormPdf => NormPdf::validate_load(x_in, y_in),
-            FunctionType::NormCdf => NormCdf::validate_load(x_in, y_in),
-            FunctionType::Erf => Erf::validate_load(x_in, y_in),
             _ => err!(ErrorCode::MissingImplementation),
         }
     }
@@ -126,9 +120,8 @@ impl FunctionDataAccessors for FunctionData {
         Ok(())
     }
 
-    fn get_num_values(&self) -> Result<Decimal> {
-        let num_values = Decimal::from_u32(self.num_values).unwrap();
-        Ok(num_values)
+    fn get_num_values(&self) -> Result<u32> {
+        Ok(self.num_values)
     }
 
     fn set_num_values(&mut self, num_values: u32) -> Result<()> {
