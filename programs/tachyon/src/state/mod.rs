@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
-use std::convert::TryInto;
 
-use crate::FunctionLogic;
+
+
 
 pub use function_data::*;
 pub use functions::*;
@@ -70,11 +70,11 @@ impl TryFrom<u8> for ValueCode {
 pub fn reduce_value_codes(rcs_as_u8: Vec<u8>) -> ValueCode {
     let rcs = rcs_as_u8.into_iter().map(|x| ValueCode::try_from(x).unwrap()).collect::<Vec<ValueCode>>();
 
-    return if rcs.contains(&ValueCode::Empty) {
+    if rcs.contains(&ValueCode::Empty) {
         ValueCode::Empty
     } else if rcs.contains(&ValueCode::Truncated) {
         ValueCode::Truncated
     } else {
         ValueCode::Valid
-    };
+    }
 }

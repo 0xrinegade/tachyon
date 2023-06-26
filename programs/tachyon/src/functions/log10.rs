@@ -1,6 +1,6 @@
-use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, Ln, ValueCode, LOAD_ERROR_TOLERANCE};
+use crate::{FunctionData, FunctionLogic, FunctionType, Ln, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
-use num_traits::{Inv, One};
+
 use rust_decimal::{Decimal, MathematicalOps};
 
 use crate::error::ErrorCode;

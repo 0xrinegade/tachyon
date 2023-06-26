@@ -1,9 +1,9 @@
 use crate::state::NUM_VALUES;
-use crate::{reduce_value_codes, Cos, Exp, FunctionDataAccessors, FunctionLogic, FunctionType, Ln, Log10, Pubkey, Sin, ValueCode};
+use crate::{Cos, Exp, FunctionDataAccessors, FunctionLogic, FunctionType, Ln, Log10, Pubkey, Sin, ValueCode};
 use anchor_lang::prelude::*;
-use num_traits::{FromPrimitive, Inv, ToPrimitive};
-use rust_decimal::{Decimal, MathematicalOps};
-use std::ops::Rem;
+
+use rust_decimal::{Decimal};
+
 
 use crate::error::ErrorCode;
 

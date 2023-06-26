@@ -1,6 +1,6 @@
 use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
-use num_traits::{Inv, One};
+
 use rust_decimal::{Decimal, MathematicalOps};
 use std::ops::Rem;
 
@@ -21,14 +21,8 @@ impl FunctionLogic for Sin {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        let mut x = x;
-
-        x = x.rem(Decimal::TWO_PI);
-
-        // grab the domain start and end
-        let domain_start = fd.get_domain_start()?;
-        let domain_end = fd.get_domain_end()?;
+    fn eval(fd: &FunctionData, x_in: Decimal) -> Result<(Decimal, ValueCode)> {
+        let x = x_in.rem(Decimal::TWO_PI);
 
         // get indices for the x value
         let (lower_index, upper_index) = fd.get_index_bounds(x)?;

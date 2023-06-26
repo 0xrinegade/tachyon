@@ -1,4 +1,4 @@
-use crate::FunctionType;
+
 use rust_decimal::Decimal;
 
 pub use cos::*;

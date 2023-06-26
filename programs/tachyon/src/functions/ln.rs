@@ -1,6 +1,6 @@
 use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
-use num_traits::{Inv, One};
+
 use rust_decimal::{Decimal, MathematicalOps};
 
 use crate::error::ErrorCode;
@@ -26,8 +26,6 @@ impl FunctionLogic for Ln {
     }
 
     fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        let mut x = x;
-
         // grab the domain start and end
         let domain_start = fd.get_domain_start()?;
         let domain_end = fd.get_domain_end()?;
@@ -55,7 +53,7 @@ impl FunctionLogic for Ln {
 
         // linear interpolation between the two known points
         // note: if index_decimal is exactly an integer, then ceil(x)=floor(x), but that case is no problem in the equation below since remainder_prop=0
-        let mut return_val = lower_val * (Decimal::ONE - remainder_prop) + upper_val * remainder_prop;
+        let return_val = lower_val * (Decimal::ONE - remainder_prop) + upper_val * remainder_prop;
 
         Ok((return_val, value_code))
     }

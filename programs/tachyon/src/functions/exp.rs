@@ -1,8 +1,7 @@
-use crate::{FuncInit, FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE, NUM_VALUES};
+use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
-use anchor_lang::ZeroCopy;
-use fast_math::exp;
-use num_traits::{FromPrimitive, Inv, ToPrimitive};
+
+use num_traits::Inv;
 use rust_decimal::{Decimal, MathematicalOps};
 
 use crate::error::ErrorCode;
@@ -25,8 +24,8 @@ impl FunctionLogic for Exp {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        let mut x = x;
+    fn eval(fd: &FunctionData, x_in: Decimal) -> Result<(Decimal, ValueCode)> {
+        let mut x = x_in;
 
         // e^-x = 1/e^x, so only cover positive values of x and invert if necessary
         let is_negative = x.is_sign_negative();
@@ -34,8 +33,7 @@ impl FunctionLogic for Exp {
             x.set_sign_positive(true);
         }
 
-        // grab the domain start and end
-        let domain_start = fd.get_domain_start()?;
+        // grab the domain end
         let domain_end = fd.get_domain_end()?;
 
         // test for out of domain bounds
