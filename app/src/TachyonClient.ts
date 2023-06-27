@@ -75,7 +75,7 @@ export class TachyonClient {
         )
     }
 
-    private async loadFunction(fData: PublicKey, fun: (d: Decimal) => Decimal, chunkSize) {
+    private async loadFunction(fData: PublicKey, fun: (d: Decimal) => Decimal, chunkSize: number) {
         let [functionData] = await getFunctionData(this.program, fData);
 
         const domainStart = rustDecimalBytesToDecimalJs(new Uint8Array(functionData.domainStart))

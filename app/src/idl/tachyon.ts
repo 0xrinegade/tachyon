@@ -389,7 +389,7 @@ export type Tachyon = {
                     16
                   ]
                 },
-                1000
+                500000
               ]
             }
           },
@@ -398,7 +398,7 @@ export type Tachyon = {
             "type": {
               "array": [
                 "u8",
-                1000
+                500000
               ]
             }
           },
@@ -1006,7 +1006,7 @@ export const IDL: Tachyon = {
                     16
                   ]
                 },
-                1000
+                500000
               ]
             }
           },
@@ -1015,7 +1015,7 @@ export const IDL: Tachyon = {
             "type": {
               "array": [
                 "u8",
-                1000
+                500000
               ]
             }
           },
