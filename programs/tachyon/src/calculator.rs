@@ -11,9 +11,6 @@ pub struct TachyonCalculator<'a> {
     pub log10: Option<&'a FunctionData>,
     pub sin: Option<&'a FunctionData>,
     pub cos: Option<&'a FunctionData>,
-    pub norm_pdf: Option<&'a FunctionData>,
-    pub norm_cdf: Option<&'a FunctionData>,
-    pub erf: Option<&'a FunctionData>,
 }
 
 impl<'a> TachyonCalculator<'a> {
@@ -56,30 +53,12 @@ impl<'a> TachyonCalculator<'a> {
         Ok((y, return_value_code))
     }
 
-    pub fn norm_pdf(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.norm_pdf, x)
-    }
-
-    pub fn norm_cdf(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.norm_cdf, x)
-    }
-
-    pub fn erf(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.erf, x)
-    }
-
     /// x^a = e^(a*ln(x))
     pub fn pow(&self, x: Decimal, power: Decimal) -> Result<(Decimal, ValueCode)> {
-        // msg!("pow x={:?} exp={:?}", x, power);
-
         let (ln_y, ln_value_code) = self.ln(x)?;
-
-        // msg!("ln({:?})={:?}", x, ln_y);
 
         let exp_x = power.checked_mul(ln_y).unwrap();
         let (exp_y, exp_value_code) = self.exp(exp_x)?;
-
-        // msg!("exp({:?})={:?}", exp_x, exp_y);
 
         let return_value_code = reduce_value_codes(Vec::from([ln_value_code as u8, exp_value_code as u8]));
 
