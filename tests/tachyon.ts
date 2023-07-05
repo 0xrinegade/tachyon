@@ -1,8 +1,8 @@
 import * as anchor from "@coral-xyz/anchor";
 import {Decimal} from 'decimal.js';
 import {assert} from "chai";
-import {Keypair, PublicKey} from "@solana/web3.js";
-import {TachyonClient, decimalJsToRustDecimalBytes, rustDecimalBytesToDecimalJs} from "../app/dist";
+import {PublicKey} from "@solana/web3.js";
+import {decimalJsToRustDecimalBytes, rustDecimalBytesToDecimalJs, TachyonClient} from "../app/dist";
 
 describe("tachyon", () => {
     const provider = anchor.AnchorProvider.local();

@@ -2,7 +2,6 @@ import type {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {Tachyon as TachyonIDLType} from '../idl';
 import {getFunctionsAddr} from "../utils";
 import {Keypair} from "@solana/web3.js";
-import {getFunctions} from "../state/functions";
 
 export const initCos = async (
     program: Program<TachyonIDLType>,

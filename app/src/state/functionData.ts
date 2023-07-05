@@ -1,8 +1,7 @@
 import {PublicKey} from "@solana/web3.js";
 import type {Program} from "@coral-xyz/anchor";
 import {Tachyon as TachyonIDLType} from '../idl';
-import {FunctionData, Functions} from "../types.js";
-import {getFunctionsAddr} from "../utils";
+import {FunctionData} from "../types.js";
 
 export const getFunctionData = async (
     program: Program<TachyonIDLType>,
