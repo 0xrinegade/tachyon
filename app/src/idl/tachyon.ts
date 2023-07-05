@@ -1,5 +1,5 @@
 export type Tachyon = {
-  "version": "0.2.5",
+  "version": "0.2.6",
   "name": "tachyon",
   "instructions": [
     {
@@ -630,7 +630,7 @@ export type Tachyon = {
 };
 
 export const IDL: Tachyon = {
-  "version": "0.2.5",
+  "version": "0.2.6",
   "name": "tachyon",
   "instructions": [
     {
