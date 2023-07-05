@@ -1,4 +1,4 @@
-use crate::{FunctionData, FunctionLogic, FunctionType, Sin, ValueCode, LOAD_ERROR_TOLERANCE};
+use crate::{FunctionData, FunctionLogic, FunctionType, Interpolation, Sin, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
 
 use rust_decimal::{Decimal, MathematicalOps};
@@ -20,7 +20,7 @@ impl FunctionLogic for Cos {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal) -> Result<(Decimal, ValueCode)> {
-        Sin::eval(fd, x_in)
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        Sin::eval(fd, x_in, interp)
     }
 }

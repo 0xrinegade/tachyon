@@ -1,4 +1,4 @@
-use crate::{FunctionData, FunctionLogic, FunctionType, Ln, ValueCode, LOAD_ERROR_TOLERANCE};
+use crate::{FunctionData, FunctionLogic, FunctionType, Interpolation, Ln, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
 
 use rust_decimal::{Decimal, MathematicalOps};
@@ -25,7 +25,7 @@ impl FunctionLogic for Log10 {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        Ln::eval(fd, x)
+    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        Ln::eval(fd, x, interp)
     }
 }

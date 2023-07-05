@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.5",
   "name": "tachyon",
   "instructions": [
     {
@@ -389,7 +389,7 @@
                     16
                   ]
                 },
-                500000
+                1000
               ]
             }
           },
@@ -398,7 +398,7 @@
             "type": {
               "array": [
                 "u8",
-                500000
+                1000
               ]
             }
           },
@@ -546,6 +546,20 @@
           },
           {
             "name": "Truncated"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Interpolation",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Linear"
+          },
+          {
+            "name": "Quadratic"
           }
         ]
       }

@@ -1,9 +1,8 @@
 use crate::state::NUM_VALUES;
-use crate::{Cos, Exp, FunctionDataAccessors, FunctionLogic, FunctionType, Ln, Log10, Pubkey, Sin, ValueCode};
+use crate::{Cos, Exp, FunctionDataAccessors, FunctionLogic, FunctionType, Interpolation, Ln, Log10, Pubkey, Sin, ValueCode};
 use anchor_lang::prelude::*;
 
-use rust_decimal::{Decimal};
-
+use rust_decimal::Decimal;
 
 use crate::error::ErrorCode;
 
@@ -21,15 +20,15 @@ pub struct FunctionData {
 }
 
 impl FunctionDataAccessors for FunctionData {
-    fn eval(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
+    fn eval(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
         let function_type = FunctionType::try_from(self.function_type).unwrap();
 
         match function_type {
-            FunctionType::Exp => Exp::eval(self, x),
-            FunctionType::Ln => Ln::eval(self, x),
-            FunctionType::Log10 => Log10::eval(self, x),
-            FunctionType::Sin => Sin::eval(self, x),
-            FunctionType::Cos => Cos::eval(self, x),
+            FunctionType::Exp => Exp::eval(self, x, interp),
+            FunctionType::Ln => Ln::eval(self, x, interp),
+            FunctionType::Log10 => Log10::eval(self, x, interp),
+            FunctionType::Sin => Sin::eval(self, x, interp),
+            FunctionType::Cos => Cos::eval(self, x, interp),
             _ => err!(ErrorCode::MissingImplementation),
         }
     }

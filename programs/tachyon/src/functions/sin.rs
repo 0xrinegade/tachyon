@@ -1,4 +1,4 @@
-use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE};
+use crate::{FunctionData, FunctionLogic, FunctionType, Interpolation, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
 
 use rust_decimal::{Decimal, MathematicalOps};
@@ -21,29 +21,11 @@ impl FunctionLogic for Sin {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
         let x = x_in.rem(Decimal::TWO_PI);
 
-        // get indices for the x value
-        let (lower_index, upper_index) = fd.get_index_bounds(x)?;
+        let (y, value_code) = Self::interpolate(fd, x, interp)?;
 
-        // grab the reduced value code for the corresponding indices
-        let value_code = fd.reduce_value_codes_from_indices(Vec::from([lower_index, upper_index]))?;
-        if value_code == ValueCode::Empty {
-            return err!(ErrorCode::EmptyData);
-        }
-
-        // get the data using the indices
-        let lower_val = fd.get_value(lower_index)?;
-        let upper_val = fd.get_value(upper_index)?;
-
-        let interval = fd.get_interval()?;
-        let remainder_prop = (x % interval) / interval; // where the requested data lives between the bounds
-
-        // linear interpolation between the two known points
-        // note: if index_decimal is exactly an integer, then ceil(x)=floor(x), but that case is no problem in the equation below since remainder_prop=0
-        let return_val = lower_val * (Decimal::ONE - remainder_prop) + upper_val * remainder_prop;
-
-        Ok((return_val, value_code))
+        Ok((y, value_code))
     }
 }

@@ -1,3 +1,3 @@
-pub use pade_exp::*;
+pub use interpolation::*;
 
-pub mod pade_exp;
+pub mod interpolation;

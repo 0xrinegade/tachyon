@@ -1,4 +1,4 @@
-use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, ValueCode, LOAD_ERROR_TOLERANCE};
+use crate::{FunctionData, FunctionDataAccessors, FunctionLogic, FunctionType, Interpolation, ValueCode, LOAD_ERROR_TOLERANCE};
 use anchor_lang::prelude::*;
 
 use num_traits::Inv;
@@ -12,7 +12,7 @@ impl FunctionLogic for Exp {
     const FUNCTION_TYPE: FunctionType = FunctionType::Exp;
 
     fn validate_load(x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)> {
-        // it's easier to calculate an accurate ln(x) than an accurate exp(x), so compare x to ln(y) instead of y to exp(x)
+        // it's easier to calculate an accurate ln(x) then an accurate exp(x), so compare x to ln(y) instead of y to exp(x)
         // this would result in higher error tolerance, but is an acceptable tradeoff, since the difficulty in calculating an accurate exp(x) on-chain is the reason for taking pre-calculated off-chain inputs as arguments
         // this on-chain verification is primarily to catch any bugs/index mix-up in the off-chain loading code
         let diff = Self::proportion_difference(x_in, y_in.ln())?;
@@ -24,7 +24,7 @@ impl FunctionLogic for Exp {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
         let mut x = x_in;
 
         // e^-x = 1/e^x, so only cover positive values of x and invert if necessary
@@ -41,31 +41,13 @@ impl FunctionLogic for Exp {
             return err!(ErrorCode::OutOfDomainBounds);
         }
 
-        // get indices for the x value
-        let (lower_index, upper_index) = fd.get_index_bounds(x)?;
-
-        // grab the reduced value code for the corresponding indices
-        let value_code = fd.reduce_value_codes_from_indices(Vec::from([lower_index, upper_index]))?;
-        if value_code == ValueCode::Empty {
-            return err!(ErrorCode::EmptyData);
-        }
-
-        // get the data using the indices
-        let lower_val = fd.get_value(lower_index)?;
-        let upper_val = fd.get_value(upper_index)?;
-
-        let interval = fd.get_interval()?;
-        let remainder_prop = (x % interval) / interval; // where the requested data lives between the bounds
-
-        // linear interpolation between the two known points
-        // note: if index_decimal is exactly an integer, then ceil(x)=floor(x), but that case is no problem in the equation below since remainder_prop=0
-        let mut return_val = lower_val * (Decimal::ONE - remainder_prop) + upper_val * remainder_prop;
+        let (mut y, value_code) = Self::interpolate(fd, x, interp)?;
 
         // invert if sign was negative, as noted above
         if is_negative {
-            return_val = return_val.inv();
+            y = y.inv();
         }
 
-        Ok((return_val, value_code))
+        Ok((y, value_code))
     }
 }

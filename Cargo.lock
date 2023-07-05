@@ -1500,7 +1500,7 @@ dependencies = [
 
 [[package]]
 name = "tachyon"
-version = "0.2.1"
+version = "0.2.5"
 dependencies = [
  "anchor-lang",
  "borsh 0.9.3",

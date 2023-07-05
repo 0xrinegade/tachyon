@@ -1,5 +1,5 @@
 export type Tachyon = {
-  "version": "0.2.1",
+  "version": "0.2.5",
   "name": "tachyon",
   "instructions": [
     {
@@ -389,7 +389,7 @@ export type Tachyon = {
                     16
                   ]
                 },
-                500000
+                1000
               ]
             }
           },
@@ -398,7 +398,7 @@ export type Tachyon = {
             "type": {
               "array": [
                 "u8",
-                500000
+                1000
               ]
             }
           },
@@ -546,6 +546,20 @@ export type Tachyon = {
           },
           {
             "name": "Truncated"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Interpolation",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Linear"
+          },
+          {
+            "name": "Quadratic"
           }
         ]
       }
@@ -616,7 +630,7 @@ export type Tachyon = {
 };
 
 export const IDL: Tachyon = {
-  "version": "0.2.1",
+  "version": "0.2.5",
   "name": "tachyon",
   "instructions": [
     {
@@ -1006,7 +1020,7 @@ export const IDL: Tachyon = {
                     16
                   ]
                 },
-                500000
+                1000
               ]
             }
           },
@@ -1015,7 +1029,7 @@ export const IDL: Tachyon = {
             "type": {
               "array": [
                 "u8",
-                500000
+                1000
               ]
             }
           },
@@ -1163,6 +1177,20 @@ export const IDL: Tachyon = {
           },
           {
             "name": "Truncated"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Interpolation",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Linear"
+          },
+          {
+            "name": "Quadratic"
           }
         ]
       }

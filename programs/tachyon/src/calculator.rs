@@ -14,37 +14,37 @@ pub struct TachyonCalculator<'a> {
 }
 
 impl<'a> TachyonCalculator<'a> {
-    fn eval(&self, fd_opt: Option<&FunctionData>, x: Decimal) -> Result<(Decimal, ValueCode)> {
+    fn eval(&self, fd_opt: Option<&FunctionData>, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
         match fd_opt {
-            Some(fd) => fd.eval(x),
+            Some(fd) => fd.eval(x, interp),
             None => err!(ErrorCode::MissingDataAccount),
         }
     }
 
-    pub fn exp(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.exp, x)
+    pub fn exp(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        self.eval(self.exp, x, interp)
     }
 
-    pub fn ln(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.ln, x)
+    pub fn ln(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        self.eval(self.ln, x, interp)
     }
 
-    pub fn log10(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.log10, x)
+    pub fn log10(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        self.eval(self.log10, x, interp)
     }
 
-    pub fn sin(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.sin, x)
+    pub fn sin(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        self.eval(self.sin, x, interp)
     }
 
-    pub fn cos(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.cos, x)
+    pub fn cos(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        self.eval(self.cos, x, interp)
     }
 
     /// tan(x) = sin(x)/cos(x)
-    pub fn tan(&self, x: Decimal) -> Result<(Decimal, ValueCode)> {
-        let (sin_y, sin_value_code) = self.sin(x)?;
-        let (cos_y, cos_value_code) = self.cos(x)?;
+    pub fn tan(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        let (sin_y, sin_value_code) = self.sin(x, interp)?;
+        let (cos_y, cos_value_code) = self.cos(x, interp)?;
 
         let return_value_code = reduce_value_codes(Vec::from([sin_value_code as u8, cos_value_code as u8]));
 
@@ -54,11 +54,11 @@ impl<'a> TachyonCalculator<'a> {
     }
 
     /// x^a = e^(a*ln(x))
-    pub fn pow(&self, x: Decimal, power: Decimal) -> Result<(Decimal, ValueCode)> {
-        let (ln_y, ln_value_code) = self.ln(x)?;
+    pub fn pow(&self, x: Decimal, power: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+        let (ln_y, ln_value_code) = self.ln(x, interp)?;
 
         let exp_x = power.checked_mul(ln_y).unwrap();
-        let (exp_y, exp_value_code) = self.exp(exp_x)?;
+        let (exp_y, exp_value_code) = self.exp(exp_x, interp)?;
 
         let return_value_code = reduce_value_codes(Vec::from([ln_value_code as u8, exp_value_code as u8]));
 

@@ -1,4 +1,4 @@
-use crate::{reduce_value_codes, FunctionType, ValueCode, NUM_VALUES};
+use crate::{reduce_value_codes, FunctionType, Interpolation, ValueCode, NUM_VALUES};
 use anchor_lang::prelude::*;
 use num_traits::{FromPrimitive, ToPrimitive};
 use rust_decimal::Decimal;
@@ -6,7 +6,7 @@ use rust_decimal::Decimal;
 use crate::error::ErrorCode;
 
 pub trait FunctionDataAccessors {
-    fn eval(&self, x: Decimal) -> Result<(Decimal, ValueCode)>;
+    fn eval(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)>;
     fn eval_load(&self, x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)>;
 
     fn get_values_array(&self) -> &[[u8; 16]; NUM_VALUES];

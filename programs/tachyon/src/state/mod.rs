@@ -6,7 +6,7 @@ pub use functions::*;
 pub mod function_data;
 pub mod functions;
 
-pub const NUM_VALUES: usize = 500_000; // (1,000,000 brings the account size to about 16MB > 10MB)
+pub const NUM_VALUES: usize = 1000; // (1,000,000 brings the account size to about 16MB > 10MB)
 
 pub const FUNCTIONS_SEED: &[u8] = b"functions";
 
@@ -74,4 +74,11 @@ pub fn reduce_value_codes(rcs_as_u8: Vec<u8>) -> ValueCode {
     } else {
         ValueCode::Valid
     }
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub enum Interpolation {
+    #[default]
+    Linear,
+    Quadratic,
 }

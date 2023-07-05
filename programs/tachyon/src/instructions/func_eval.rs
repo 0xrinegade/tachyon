@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 use anchor_lang::ZeroCopy;
 use rust_decimal::Decimal;
 
-
 use crate::error::ErrorCode;
 use crate::state::*;
 use crate::FunctionDataAccessors;
@@ -30,7 +29,8 @@ impl<T: ZeroCopy + Owner + FunctionDataAccessors> FuncEval<'_, T> {
             return err!(ErrorCode::IncompleteDataLoading);
         }
 
-        let (y, value_code) = f.eval(Decimal::deserialize(x_raw))?;
+        // FIXME: hard-coded linear interpolation
+        let (y, value_code) = f.eval(Decimal::deserialize(x_raw), Interpolation::Linear)?;
 
         Ok((y.serialize(), value_code as u8))
     }
