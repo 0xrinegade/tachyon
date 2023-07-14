@@ -22,7 +22,7 @@ pub trait FunctionLogic {
 
     fn interpolate(fd: &FunctionData, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
         // get indices for the x value
-        let (lower_index, upper_index) = fd.get_index_bounds(x)?;
+        let (lower_index, upper_index, x_index_decimal) = fd.get_index_bounds(x)?;
 
         if lower_index == upper_index {
             let y = fd.get_value(lower_index)?;
@@ -41,7 +41,7 @@ pub trait FunctionLogic {
             Interpolation::Linear => {
                 let value_code = fd.reduce_value_codes_from_indices(Vec::from([lower_index, upper_index]))?;
 
-                (interpolation::linear(point_a, point_b, x)?, value_code)
+                (interpolation::linear(point_a, point_b, x_index_decimal)?, value_code)
             }
             Interpolation::Quadratic => {
                 // determine if we can grab the point before the index pair or the point after
@@ -61,7 +61,7 @@ pub trait FunctionLogic {
                     ((Decimal::from_u32(prev_index).unwrap(), prev_val), value_code)
                 };
 
-                (interpolation::quadratic(point_a, point_b, point_c, x)?, code)
+                (interpolation::quadratic(point_a, point_b, point_c, x_index_decimal)?, code)
             }
         };
 

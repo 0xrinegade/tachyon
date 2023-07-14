@@ -22,16 +22,16 @@ pub struct FuncEval<'info, T: ZeroCopy + Owner + FunctionDataAccessors> {
 }
 
 impl<T: ZeroCopy + Owner + FunctionDataAccessors> FuncEval<'_, T> {
-    pub fn handler(ctx: Context<FuncEval<T>>, x_raw: [u8; 16], interpolation: Interpolation, saturating: bool) -> Result<([u8; 16], u8)> {
+    pub fn handler(ctx: Context<FuncEval<T>>, x_raw: [u8; 16], interpolation: Interpolation, saturating: bool) -> Result<[u8; 16]> {
         let f = ctx.accounts.f.load()?;
 
         if f.get_num_values_loaded() != NUM_VALUES as u32 {
             return err!(ErrorCode::IncompleteDataLoading);
         }
 
-        // FIXME: hard-coded linear interpolation
         let (y, value_code) = f.eval(Decimal::deserialize(x_raw), interpolation, saturating)?;
 
-        Ok((y.serialize(), value_code as u8))
+        // TODO: return value_code as well
+        Ok(y.serialize())
     }
 }

@@ -3,6 +3,7 @@ import {Decimal} from 'decimal.js';
 import {assert} from "chai";
 import {PublicKey} from "@solana/web3.js";
 import {decimalJsToRustDecimalBytes, rustDecimalBytesToDecimalJs, TachyonClient} from "../app/dist";
+import * as borsh from "borsh";
 
 describe("tachyon", () => {
     const provider = anchor.AnchorProvider.local();
@@ -10,13 +11,15 @@ describe("tachyon", () => {
 
     const tachyonClient = new TachyonClient(provider, new PublicKey("tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ"))
 
+    const errorTolerance = new Decimal(0.0000000001)
+
     it("initialize", async () => {
         await txHandler(() => tachyonClient.initialize())
     })
 
     it("initExp", async () => {
         let domainStart = new Decimal(0)
-        let domainEnd = new Decimal(50)
+        let domainEnd = new Decimal(66.5)
         await txHandler(() => tachyonClient.initExp(decimalJsToRustDecimalBytes(domainStart), decimalJsToRustDecimalBytes(domainEnd)))
     })
 
@@ -66,27 +69,72 @@ describe("tachyon", () => {
 
     it("evalExp", async () => {
         let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalExp(decimalJsToRustDecimalBytes(x)))
+        let tx = await txHandler(() => tachyonClient.evalExp(decimalJsToRustDecimalBytes(x)))
+
+        let ctx = await provider.connection.getTransaction(tx, {commitment: "confirmed",});
+
+        let result = getDecimal(ctx)
+        let error = (x.exp().sub(result)).abs().div(x.exp())
+
+        console.log(error)
+
+        // assert(error < errorTolerance)
     })
 
     it("evalLn", async () => {
         let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalLn(decimalJsToRustDecimalBytes(x)))
+        let tx = await txHandler(() => tachyonClient.evalLn(decimalJsToRustDecimalBytes(x)))
+
+        let ctx = await provider.connection.getTransaction(tx, {commitment: "confirmed",});
+
+        let result = getDecimal(ctx)
+        let error = (x.ln().sub(result)).abs()
+
+        console.log(error)
+
+        // assert(error < errorTolerance)
     })
 
     it("evalLog10", async () => {
         let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalLog10(decimalJsToRustDecimalBytes(x)))
+        let tx = await txHandler(() => tachyonClient.evalLog10(decimalJsToRustDecimalBytes(x)))
+
+        let ctx = await provider.connection.getTransaction(tx, {commitment: "confirmed",});
+
+        let result = getDecimal(ctx)
+        let error = (x.log().sub(result)).abs()
+
+        console.log(error)
+
+        // assert(error < errorTolerance)
     })
 
     it("evalSin", async () => {
         let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalSin(decimalJsToRustDecimalBytes(x)))
+        let tx = await txHandler(() => tachyonClient.evalSin(decimalJsToRustDecimalBytes(x)))
+
+        let ctx = await provider.connection.getTransaction(tx, {commitment: "confirmed",});
+
+        let result = getDecimal(ctx)
+        let error = (x.sin().sub(result)).abs()
+
+        console.log(error)
+
+        // assert(error < errorTolerance)
     })
 
     it("evalCos", async () => {
         let x = new Decimal(1)
-        await txHandler(() => tachyonClient.evalCos(decimalJsToRustDecimalBytes(x)))
+        let tx = await txHandler(() => tachyonClient.evalCos(decimalJsToRustDecimalBytes(x)))
+
+        let ctx = await provider.connection.getTransaction(tx, {commitment: "confirmed",});
+
+        let result = getDecimal(ctx)
+        let error = (x.cos().sub(result)).abs()
+
+        console.log(error)
+
+        // assert(error < errorTolerance)
     })
 
     it("decimal utils", async () => {
@@ -117,11 +165,29 @@ describe("tachyon", () => {
 
 });
 
+const getReturnLog = (confirmedTransaction) => {
+    const prefix = "Program return: ";
+    let log = confirmedTransaction.meta.logMessages.find((log) =>
+        log.startsWith(prefix)
+    );
+    log = log.slice(prefix.length);
+    const [key, data] = log.split(" ", 2);
+    const buffer = Buffer.from(data, "base64");
+    return [key, data, buffer];
+};
+
+const getDecimal = (t): Decimal => {
+    const [key, data, buffer] = getReturnLog(t)
+    const reader = new borsh.BinaryReader(buffer);
+    const array = reader.readFixedArray(16);
+    return rustDecimalBytesToDecimalJs(new Uint8Array(array))
+};
+
 export async function txHandler(handler: Function){
     await sleep(400)
 
     try {
-        await handler()
+        return await handler()
     } catch (e) {
         console.log(e)
     }

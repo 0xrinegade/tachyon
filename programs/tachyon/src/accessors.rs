@@ -75,7 +75,7 @@ pub trait FunctionDataAccessors {
     fn get_num_values(&self) -> Result<u32>;
     fn set_num_values(&mut self, num_values: u32) -> Result<()>;
 
-    fn get_index_bounds(&self, x: Decimal) -> Result<(u32, u32)> {
+    fn get_index_bounds(&self, x: Decimal) -> Result<(u32, u32, Decimal)> {
         let domain_start = self.get_domain_start()?;
         let domain_end = self.get_domain_end()?;
         let num_values = Decimal::from_u32(self.get_num_values()?).unwrap();
@@ -87,6 +87,6 @@ pub trait FunctionDataAccessors {
         let lower_index = index_decimal.floor().to_u32().unwrap();
         let upper_index = index_decimal.ceil().to_u32().unwrap();
 
-        Ok((lower_index, upper_index))
+        Ok((lower_index, upper_index, index_decimal))
     }
 }

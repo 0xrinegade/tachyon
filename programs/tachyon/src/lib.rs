@@ -28,7 +28,7 @@ pub mod tachyon {
         FuncLoad::handler(ctx, index, x_in, y_in)
     }
 
-    pub fn func_eval(ctx: Context<FuncEval<FunctionData>>, x_raw: [u8; 16], interpolation: Interpolation, saturating: bool) -> Result<([u8; 16], u8)> {
+    pub fn func_eval(ctx: Context<FuncEval<FunctionData>>, x_raw: [u8; 16], interpolation: Interpolation, saturating: bool) -> Result<[u8; 16]> {
         FuncEval::handler(ctx, x_raw, interpolation, saturating)
     }
 

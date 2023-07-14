@@ -1,7 +1,7 @@
 import type {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {Tachyon as TachyonIDLType} from '../idl';
 import {getFunctionsAddr} from "../utils";
-import {PublicKey} from "@solana/web3.js";
+import {ConfirmOptions, PublicKey} from "@solana/web3.js";
 import {Interpolation} from "../types";
 
 export const funcEval = async (
@@ -11,6 +11,7 @@ export const funcEval = async (
     x: number[],
     interpolation: Interpolation = Interpolation.Quadratic,
     saturating: boolean = true,
+    confirmOptions: ConfirmOptions = { commitment: "confirmed", skipPreflight: true }
 ): Promise<string> => {
     const [functionsPda] = getFunctionsAddr(program.programId);
 
@@ -21,5 +22,5 @@ export const funcEval = async (
             functions: functionsPda,
             f: f,
         })
-        .rpc()
+        .rpc(confirmOptions)
 };

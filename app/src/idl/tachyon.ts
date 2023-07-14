@@ -123,7 +123,10 @@ export type Tachyon = {
         }
       ],
       "returns": {
-        "defined": "([u8;16],u8)"
+        "array": [
+          "u8",
+          16
+        ]
       }
     },
     {
@@ -752,7 +755,10 @@ export const IDL: Tachyon = {
         }
       ],
       "returns": {
-        "defined": "([u8;16],u8)"
+        "array": [
+          "u8",
+          16
+        ]
       }
     },
     {
