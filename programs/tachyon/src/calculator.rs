@@ -14,31 +14,31 @@ pub struct TachyonCalculator<'a> {
 }
 
 impl<'a> TachyonCalculator<'a> {
-    fn eval(&self, fd_opt: Option<&FunctionData>, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+    fn eval(&self, fd_opt: Option<&FunctionData>, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
         match fd_opt {
-            Some(fd) => fd.eval(x, interp),
+            Some(fd) => fd.eval(x, interp, saturating),
             None => err!(ErrorCode::MissingDataAccount),
         }
     }
 
-    pub fn exp(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.exp, x, interp)
+    pub fn exp(&self, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
+        self.eval(self.exp, x, interp, saturating)
     }
 
     pub fn ln(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.ln, x, interp)
+        self.eval(self.ln, x, interp, false)
     }
 
     pub fn log10(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.log10, x, interp)
+        self.eval(self.log10, x, interp, false)
     }
 
     pub fn sin(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.sin, x, interp)
+        self.eval(self.sin, x, interp, false)
     }
 
     pub fn cos(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        self.eval(self.cos, x, interp)
+        self.eval(self.cos, x, interp, false)
     }
 
     /// tan(x) = sin(x)/cos(x)
@@ -54,11 +54,16 @@ impl<'a> TachyonCalculator<'a> {
     }
 
     /// x^a = e^(a*ln(x))
-    pub fn pow(&self, x: Decimal, power: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+    pub fn pow(&self, x: Decimal, power: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
         let (ln_y, ln_value_code) = self.ln(x, interp)?;
 
-        let exp_x = power.checked_mul(ln_y).unwrap();
-        let (exp_y, exp_value_code) = self.exp(exp_x, interp)?;
+        let exp_x = if saturating {
+            power.saturating_mul(ln_y)
+        } else {
+            power.checked_mul(ln_y).unwrap()
+        };
+
+        let (exp_y, exp_value_code) = self.exp(exp_x, interp, saturating)?;
 
         let return_value_code = reduce_value_codes(Vec::from([ln_value_code as u8, exp_value_code as u8]));
 

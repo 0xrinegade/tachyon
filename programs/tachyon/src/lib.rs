@@ -1,13 +1,9 @@
 use anchor_lang::prelude::*;
 
-use crate::error::ErrorCode;
-
 use crate::accessors::*;
-
-
+use crate::error::ErrorCode;
 use crate::functions::*;
 use crate::instructions::*;
-
 use crate::state::*;
 
 pub mod accessors;
@@ -32,8 +28,8 @@ pub mod tachyon {
         FuncLoad::handler(ctx, index, x_in, y_in)
     }
 
-    pub fn func_eval(ctx: Context<FuncEval<FunctionData>>, x_raw: [u8; 16]) -> Result<([u8; 16], u8)> {
-        FuncEval::handler(ctx, x_raw)
+    pub fn func_eval(ctx: Context<FuncEval<FunctionData>>, x_raw: [u8; 16], interpolation: Interpolation, saturating: bool) -> Result<([u8; 16], u8)> {
+        FuncEval::handler(ctx, x_raw, interpolation, saturating)
     }
 
     pub fn init_exp(ctx: Context<FuncInit<FunctionData>>, domain_start_raw: [u8; 16], domain_end_raw: [u8; 16]) -> Result<()> {

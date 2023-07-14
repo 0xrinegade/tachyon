@@ -110,6 +110,16 @@ export type Tachyon = {
               16
             ]
           }
+        },
+        {
+          "name": "interpolation",
+          "type": {
+            "defined": "Interpolation"
+          }
+        },
+        {
+          "name": "saturating",
+          "type": "bool"
         }
       ],
       "returns": {
@@ -448,18 +458,6 @@ export type Tachyon = {
           },
           {
             "name": "cos",
-            "type": "publicKey"
-          },
-          {
-            "name": "normPdf",
-            "type": "publicKey"
-          },
-          {
-            "name": "normCdf",
-            "type": "publicKey"
-          },
-          {
-            "name": "erf",
             "type": "publicKey"
           },
           {
@@ -741,6 +739,16 @@ export const IDL: Tachyon = {
               16
             ]
           }
+        },
+        {
+          "name": "interpolation",
+          "type": {
+            "defined": "Interpolation"
+          }
+        },
+        {
+          "name": "saturating",
+          "type": "bool"
         }
       ],
       "returns": {
@@ -1079,18 +1087,6 @@ export const IDL: Tachyon = {
           },
           {
             "name": "cos",
-            "type": "publicKey"
-          },
-          {
-            "name": "normPdf",
-            "type": "publicKey"
-          },
-          {
-            "name": "normCdf",
-            "type": "publicKey"
-          },
-          {
-            "name": "erf",
             "type": "publicKey"
           },
           {

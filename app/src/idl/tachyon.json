@@ -110,6 +110,16 @@
               16
             ]
           }
+        },
+        {
+          "name": "interpolation",
+          "type": {
+            "defined": "Interpolation"
+          }
+        },
+        {
+          "name": "saturating",
+          "type": "bool"
         }
       ],
       "returns": {
@@ -448,18 +458,6 @@
           },
           {
             "name": "cos",
-            "type": "publicKey"
-          },
-          {
-            "name": "normPdf",
-            "type": "publicKey"
-          },
-          {
-            "name": "normCdf",
-            "type": "publicKey"
-          },
-          {
-            "name": "erf",
             "type": "publicKey"
           },
           {

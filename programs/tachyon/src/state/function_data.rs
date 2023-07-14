@@ -20,15 +20,15 @@ pub struct FunctionData {
 }
 
 impl FunctionDataAccessors for FunctionData {
-    fn eval(&self, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+    fn eval(&self, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
         let function_type = FunctionType::try_from(self.function_type).unwrap();
 
         match function_type {
-            FunctionType::Exp => Exp::eval(self, x, interp),
-            FunctionType::Ln => Ln::eval(self, x, interp),
-            FunctionType::Log10 => Log10::eval(self, x, interp),
-            FunctionType::Sin => Sin::eval(self, x, interp),
-            FunctionType::Cos => Cos::eval(self, x, interp),
+            FunctionType::Exp => Exp::eval(self, x, interp, saturating),
+            FunctionType::Ln => Ln::eval(self, x, interp, saturating),
+            FunctionType::Log10 => Log10::eval(self, x, interp, saturating),
+            FunctionType::Sin => Sin::eval(self, x, interp, saturating),
+            FunctionType::Cos => Cos::eval(self, x, interp, saturating),
             _ => err!(ErrorCode::MissingImplementation),
         }
     }

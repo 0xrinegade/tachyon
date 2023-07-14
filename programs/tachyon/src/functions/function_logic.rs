@@ -10,7 +10,7 @@ pub trait FunctionLogic {
     const FUNCTION_TYPE: FunctionType;
 
     fn validate_load(x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)>;
-    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)>;
+    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)>;
 
     fn proportion_difference(a: Decimal, b: Decimal) -> Result<Decimal> {
         if a.is_zero() || b.is_zero() {
@@ -23,6 +23,12 @@ pub trait FunctionLogic {
     fn interpolate(fd: &FunctionData, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
         // get indices for the x value
         let (lower_index, upper_index) = fd.get_index_bounds(x)?;
+
+        if lower_index == upper_index {
+            let y = fd.get_value(lower_index)?;
+            let code = fd.reduce_value_codes_from_indices(Vec::from([lower_index]))?;
+            return Ok((y, code));
+        }
 
         // get the data using the indices
         let lower_val = fd.get_value(lower_index)?;

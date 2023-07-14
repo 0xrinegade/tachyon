@@ -24,7 +24,7 @@ impl FunctionLogic for Exp {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
         let mut x = x_in;
 
         // e^-x = 1/e^x, so only cover positive values of x and invert if necessary
@@ -38,7 +38,11 @@ impl FunctionLogic for Exp {
 
         // test for out of domain bounds
         if x > domain_end {
-            return err!(ErrorCode::OutOfDomainBounds);
+            if saturating {
+                x = domain_end;
+            } else {
+                return err!(ErrorCode::OutOfDomainBounds);
+            }
         }
 
         let (mut y, value_code) = Self::interpolate(fd, x, interp)?;

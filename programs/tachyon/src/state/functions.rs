@@ -12,9 +12,6 @@ pub struct Functions {
     pub log10: Pubkey,
     pub sin: Pubkey,
     pub cos: Pubkey,
-    pub norm_pdf: Pubkey,
-    pub norm_cdf: Pubkey,
-    pub erf: Pubkey,
     //
     pub padding_0: Pubkey,
     pub padding_1: Pubkey,

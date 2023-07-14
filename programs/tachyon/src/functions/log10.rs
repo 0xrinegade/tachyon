@@ -25,7 +25,7 @@ impl FunctionLogic for Log10 {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        Ln::eval(fd, x, interp)
+    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
+        Ln::eval(fd, x, interp, saturating)
     }
 }

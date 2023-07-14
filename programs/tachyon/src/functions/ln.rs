@@ -25,7 +25,7 @@ impl FunctionLogic for Ln {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, _saturating: bool) -> Result<(Decimal, ValueCode)> {
         // grab the domain start and end
         let domain_start = fd.get_domain_start()?;
         let domain_end = fd.get_domain_end()?;

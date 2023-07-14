@@ -20,7 +20,7 @@ impl FunctionLogic for Cos {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation) -> Result<(Decimal, ValueCode)> {
-        Sin::eval(fd, x_in, interp)
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
+        Sin::eval(fd, x_in, interp, saturating)
     }
 }
