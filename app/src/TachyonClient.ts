@@ -2,8 +2,7 @@ import {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {PublicKey} from "@solana/web3.js";
 import {IDL, Tachyon as TachyonIDLType} from './idl';
 import {funcEval, funcLoad, initCos, initExp, initialize, initLn, initLog10, initSin,} from "./rpc";
-import {getFunctions} from "./state";
-import {getFunctionData} from "./state/functionData";
+import {getFunctionData, getFunctions} from "./state";
 import {chunk, rustDecimalBytesToDecimalJs, sleep} from "./utils";
 import {Decimal} from "decimal.js";
 
