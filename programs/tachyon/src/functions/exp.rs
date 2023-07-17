@@ -24,7 +24,7 @@ impl FunctionLogic for Exp {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation, saturating: bool) -> Result<Decimal> {
         let mut x = x_in;
 
         // e^-x = 1/e^x, so only cover positive values of x and invert if necessary
@@ -45,13 +45,13 @@ impl FunctionLogic for Exp {
             }
         }
 
-        let (mut y, value_code) = Self::interpolate(fd, x, interp)?;
+        let mut y = Self::interpolate(fd, x, interp)?;
 
         // invert if sign was negative, as noted above
         if is_negative {
             y = y.inv();
         }
 
-        Ok((y, value_code))
+        Ok(y)
     }
 }

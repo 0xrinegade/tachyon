@@ -11,9 +11,8 @@ impl FunctionLogic for Ln {
     const FUNCTION_TYPE: FunctionType = FunctionType::Ln;
 
     fn validate_load(x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)> {
-        // truncated values should be set via edge cases within the program, not via loaded inputs
         if x_in.is_zero() {
-            return Ok((Decimal::MIN, ValueCode::Truncated));
+            return Ok((Decimal::ZERO, ValueCode::NaN));
         }
 
         let diff = Self::proportion_difference(y_in, x_in.ln())?;
@@ -25,7 +24,7 @@ impl FunctionLogic for Ln {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, _saturating: bool) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, _saturating: bool) -> Result<Decimal> {
         // grab the domain start and end
         let domain_start = fd.get_domain_start()?;
         let domain_end = fd.get_domain_end()?;
@@ -35,8 +34,8 @@ impl FunctionLogic for Ln {
             return err!(ErrorCode::OutOfDomainBounds);
         }
 
-        let (y, value_code) = Self::interpolate(fd, x, interp)?;
+        let y = Self::interpolate(fd, x, interp)?;
 
-        Ok((y, value_code))
+        Ok(y)
     }
 }

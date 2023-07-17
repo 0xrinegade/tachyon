@@ -29,9 +29,8 @@ impl<T: ZeroCopy + Owner + FunctionDataAccessors> FuncEval<'_, T> {
             return err!(ErrorCode::IncompleteDataLoading);
         }
 
-        let (y, _value_code) = f.eval(Decimal::deserialize(x_raw), interpolation, saturating)?;
+        let y = f.eval(Decimal::deserialize(x_raw), interpolation, saturating)?;
 
-        // TODO: return value_code as well
         Ok(y.serialize())
     }
 }

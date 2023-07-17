@@ -18,6 +18,8 @@ pub enum ErrorCode {
     IncompleteDataLoading,
     #[msg("Data at the requested index has not been populated")]
     EmptyData,
+    #[msg("Data at the requested index is not a number (infinite)")]
+    NaNData,
     #[msg("Missing function implementation")]
     MissingImplementation,
     #[msg("Invalid index for X value")]

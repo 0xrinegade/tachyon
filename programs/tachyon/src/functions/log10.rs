@@ -11,9 +11,8 @@ impl FunctionLogic for Log10 {
     const FUNCTION_TYPE: FunctionType = FunctionType::Log10;
 
     fn validate_load(x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)> {
-        // truncated values should be set via edge cases within the program, not via loaded inputs
         if x_in.is_zero() {
-            return Ok((Decimal::MIN, ValueCode::Truncated));
+            return Ok((Decimal::ZERO, ValueCode::NaN));
         }
 
         let diff = Self::proportion_difference(y_in, x_in.log10())?;
@@ -25,7 +24,7 @@ impl FunctionLogic for Log10 {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x: Decimal, interp: Interpolation, saturating: bool) -> Result<Decimal> {
         Ln::eval(fd, x, interp, saturating)
     }
 }

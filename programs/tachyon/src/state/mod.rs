@@ -6,7 +6,7 @@ pub use functions::*;
 pub mod function_data;
 pub mod functions;
 
-pub const NUM_VALUES: usize = 100000; // (1,000,000 brings the account size to about 16MB > 10MB)
+pub const NUM_VALUES: usize = 1000; // (1,000,000 brings the account size to about 16MB > 10MB)
 
 pub const FUNCTIONS_SEED: &[u8] = b"functions";
 
@@ -44,11 +44,7 @@ pub enum ValueCode {
 
     Valid = 1,
 
-    // for something like y=ln(0), which is negative infinity, it is replaced by Decimal::MIN
-    // also present for ln(very_very_low_positive_number) where the result is less than Decimal::MIN (or situations where y is greater than Decimal::MAX)
-    // the user can decide whether or not to use the returned value or to throw an error (option is set via the calc config, default is to throw an error)
-    // this may be fine in cases where it is meant to be used in a fraction, since 1/Decimal::MAX ~ 0, but it depends on the use case
-    Truncated = 2,
+    NaN = 2,
 }
 
 impl TryFrom<u8> for ValueCode {
@@ -58,7 +54,7 @@ impl TryFrom<u8> for ValueCode {
         match v {
             x if x == ValueCode::Empty as u8 => Ok(ValueCode::Empty),
             x if x == ValueCode::Valid as u8 => Ok(ValueCode::Valid),
-            x if x == ValueCode::Truncated as u8 => Ok(ValueCode::Truncated),
+            x if x == ValueCode::NaN as u8 => Ok(ValueCode::NaN),
             _ => Err(()),
         }
     }
@@ -69,8 +65,8 @@ pub fn reduce_value_codes(rcs_as_u8: Vec<u8>) -> ValueCode {
 
     if rcs.contains(&ValueCode::Empty) {
         ValueCode::Empty
-    } else if rcs.contains(&ValueCode::Truncated) {
-        ValueCode::Truncated
+    } else if rcs.contains(&ValueCode::NaN) {
+        ValueCode::NaN
     } else {
         ValueCode::Valid
     }

@@ -6,7 +6,7 @@ use rust_decimal::Decimal;
 use crate::error::ErrorCode;
 
 pub trait FunctionDataAccessors {
-    fn eval(&self, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)>;
+    fn eval(&self, x: Decimal, interp: Interpolation, saturating: bool) -> Result<Decimal>;
     fn eval_load(&self, x_in: Decimal, y_in: Decimal) -> Result<(Decimal, ValueCode)>;
 
     fn get_values_array(&self) -> &[[u8; 16]; NUM_VALUES];
@@ -67,7 +67,7 @@ pub trait FunctionDataAccessors {
     }
 
     fn get_x_from_index(&self, index: u32) -> Result<Decimal> {
-        let index_prop = Decimal::from_u32(index).unwrap() / Decimal::from_u32(self.get_num_values()?).unwrap();
+        let index_prop = Decimal::from_u32(index).unwrap() / (Decimal::from_u32(self.get_num_values()?).unwrap() - Decimal::ONE);
         let x = index_prop * self.get_domain()? + self.get_domain_start()?;
         Ok(x)
     }

@@ -1,10 +1,11 @@
 import {AnchorProvider, Program} from "@coral-xyz/anchor";
-import {PublicKey} from "@solana/web3.js";
+import {ConfirmOptions, PublicKey} from "@solana/web3.js";
 import {IDL, Tachyon as TachyonIDLType} from './idl';
 import {funcEval, funcLoad, initCos, initExp, initialize, initLn, initLog10, initSin,} from "./rpc";
 import {getFunctionData, getFunctions} from "./state";
 import {chunk, rustDecimalBytesToDecimalJs, sleep} from "./utils";
 import {Decimal} from "decimal.js";
+import {Interpolation} from "./types";
 
 const DEFAULT_CHUNK_SIZE = 100;
 
@@ -94,7 +95,7 @@ export class TachyonClient {
 
                 await Promise.all(indices.map(async (index_num) => {
                     const index = new Decimal(index_num)
-                    const x = (index.div(numValues)).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / num_values) * (domainEnd - domainStart) + domainStart
+                    const x = (index.div(numValues.sub(new Decimal(1)))).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / (num_values - 1)) * (domainEnd - domainStart) + domainStart
                     let y = fun(x)
 
                     if (!y.isFinite()){
@@ -167,52 +168,81 @@ export class TachyonClient {
         )
     }
 
-    private async evaluateFunction(f: PublicKey, x: number[]) {
+    private async evaluateFunction(
+        f: PublicKey,
+        x: number[],
+        interpolation: Interpolation = Interpolation.Quadratic,
+        saturating: boolean = true,
+    ) {
         return funcEval(
             this.program,
             this.provider,
             f,
-            x
+            x,
+            interpolation,
+            saturating,
         )
     }
 
-    async evalExp(x: number[]) {
+    async evalExp(
+        x: number[],
+        interpolation: Interpolation = Interpolation.Quadratic,
+        saturating: boolean = true,
+    ) {
         const [functions] = await getFunctions(this.program);
         return this.evaluateFunction(
             functions.exp,
-            x
+            x,
+            interpolation,
+            saturating,
         )
     }
 
-    async evalLn(x: number[]) {
+    async evalLn(
+        x: number[],
+        interpolation: Interpolation = Interpolation.Quadratic,
+    ) {
         const [functions] = await getFunctions(this.program);
         return this.evaluateFunction(
             functions.ln,
-            x
+            x,
+            interpolation,
         )
     }
 
-    async evalLog10(x: number[]) {
+    async evalLog10(
+        x: number[],
+        interpolation: Interpolation = Interpolation.Quadratic,
+    ) {
         const [functions] = await getFunctions(this.program);
         return this.evaluateFunction(
             functions.log10,
-            x
+            x,
+            interpolation,
         )
     }
 
-    async evalSin(x: number[]) {
+    async evalSin(
+        x: number[],
+        interpolation: Interpolation = Interpolation.Quadratic,
+    ) {
         const [functions] = await getFunctions(this.program);
         return this.evaluateFunction(
             functions.sin,
-            x
+            x,
+            interpolation,
         )
     }
 
-    async evalCos(x: number[]) {
+    async evalCos(
+        x: number[],
+        interpolation: Interpolation = Interpolation.Quadratic,
+    ) {
         const [functions] = await getFunctions(this.program);
         return this.evaluateFunction(
             functions.cos,
-            x
+            x,
+            interpolation,
         )
     }
 

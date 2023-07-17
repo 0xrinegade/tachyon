@@ -20,7 +20,7 @@ pub struct FunctionData {
 }
 
 impl FunctionDataAccessors for FunctionData {
-    fn eval(&self, x: Decimal, interp: Interpolation, saturating: bool) -> Result<(Decimal, ValueCode)> {
+    fn eval(&self, x: Decimal, interp: Interpolation, saturating: bool) -> Result<Decimal> {
         let function_type = FunctionType::try_from(self.function_type).unwrap();
 
         match function_type {

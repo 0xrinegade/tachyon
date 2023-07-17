@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "name": "tachyon",
   "instructions": [
     {
@@ -402,7 +402,7 @@
                     16
                   ]
                 },
-                100000
+                1000
               ]
             }
           },
@@ -411,7 +411,7 @@
             "type": {
               "array": [
                 "u8",
-                100000
+                1000
               ]
             }
           },
@@ -546,7 +546,7 @@
             "name": "Valid"
           },
           {
-            "name": "Truncated"
+            "name": "NaN"
           }
         ]
       }
@@ -609,21 +609,26 @@
     },
     {
       "code": 6008,
+      "name": "NaNData",
+      "msg": "Data at the requested index is not a number (infinite)"
+    },
+    {
+      "code": 6009,
       "name": "MissingImplementation",
       "msg": "Missing function implementation"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "InvalidIndex",
       "msg": "Invalid index for X value"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "InvalidValue",
       "msg": "Invalid Y value for X value"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "DataAtIndexAlreadyLoaded",
       "msg": "The data at this index has already been loaded"
     }

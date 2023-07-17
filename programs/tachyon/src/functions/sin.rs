@@ -21,11 +21,11 @@ impl FunctionLogic for Sin {
         Ok((y_in, ValueCode::Valid))
     }
 
-    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation, _saturating: bool) -> Result<(Decimal, ValueCode)> {
+    fn eval(fd: &FunctionData, x_in: Decimal, interp: Interpolation, _saturating: bool) -> Result<Decimal> {
         let x = x_in.rem(Decimal::TWO_PI);
 
-        let (y, value_code) = Self::interpolate(fd, x, interp)?;
+        let y = Self::interpolate(fd, x, interp)?;
 
-        Ok((y, value_code))
+        Ok(y)
     }
 }
