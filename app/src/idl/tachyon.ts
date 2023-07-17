@@ -1,5 +1,5 @@
 export type Tachyon = {
-  "version": "0.5.0",
+  "version": "0.5.2",
   "name": "tachyon",
   "instructions": [
     {
@@ -402,7 +402,7 @@ export type Tachyon = {
                     16
                   ]
                 },
-                1000
+                200000
               ]
             }
           },
@@ -411,7 +411,7 @@ export type Tachyon = {
             "type": {
               "array": [
                 "u8",
-                1000
+                200000
               ]
             }
           },
@@ -636,7 +636,7 @@ export type Tachyon = {
 };
 
 export const IDL: Tachyon = {
-  "version": "0.5.0",
+  "version": "0.5.2",
   "name": "tachyon",
   "instructions": [
     {
@@ -1039,7 +1039,7 @@ export const IDL: Tachyon = {
                     16
                   ]
                 },
-                1000
+                200000
               ]
             }
           },
@@ -1048,7 +1048,7 @@ export const IDL: Tachyon = {
             "type": {
               "array": [
                 "u8",
-                1000
+                200000
               ]
             }
           },
