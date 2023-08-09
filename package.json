@@ -2,11 +2,15 @@
     "scripts": {
         "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
         "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-        "idl": "cp ./target/types/tachyon.ts ./app/src/idl/tachyon.ts && cp ./target/idl/tachyon.json ./app/src/idl/tachyon.json"
+        "idl": "cp ./target/types/tachyon.ts ./app/src/idl/tachyon.ts && cp ./target/idl/tachyon.json ./app/src/idl/tachyon.json",
+        "load": "ts-node ./scripts/initialize.ts"
     },
     "dependencies": {
         "@coral-xyz/anchor": "^0.27.0",
-        "decimal.js": "^10.4.3"
+        "decimal.js": "^10.4.3",
+        "dotenv": "^16.3.1",
+        "@dysonswap/tachyon": "0.5.2-dyson",
+        "@solana/web3.js": "^1.74.0"
     },
     "devDependencies": {
         "@types/bn.js": "^5.1.0",

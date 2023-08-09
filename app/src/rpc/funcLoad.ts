@@ -1,6 +1,6 @@
 import type {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {Tachyon as TachyonIDLType} from '../idl';
-import {PublicKey} from "@solana/web3.js";
+import {PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {addComputeUnits, decimalJsToRustDecimalBytes, getFunctionsAddr} from "../utils";
 import {Decimal} from "decimal.js";
 
@@ -10,7 +10,8 @@ export const funcLoad = async (
     f: PublicKey,
     index: number,
     x: Decimal,
-    y: Decimal
+    y: Decimal,
+    postInstructions: TransactionInstruction[] = []
 ): Promise<string> => {
     const [functionsPda] = getFunctionsAddr(program.programId);
 
@@ -25,5 +26,29 @@ export const funcLoad = async (
             f: f,
         })
         .preInstructions([addComputeUnits()])
+        .postInstructions(postInstructions)
         .rpc()
+};
+
+export const funcLoadIx = async (
+    program: Program<TachyonIDLType>,
+    provider: AnchorProvider,
+    f: PublicKey,
+    index: number,
+    x: Decimal,
+    y: Decimal
+): Promise<TransactionInstruction> => {
+    const [functionsPda] = getFunctionsAddr(program.programId);
+
+    const x_raw = Array.from(decimalJsToRustDecimalBytes(x))
+    const y_raw = Array.from(decimalJsToRustDecimalBytes(y))
+
+    return program.methods
+        .funcLoad(index, x_raw, y_raw)
+        .accounts({
+            admin: provider.wallet.publicKey,
+            functions: functionsPda,
+            f: f,
+        })
+        .instruction()
 };

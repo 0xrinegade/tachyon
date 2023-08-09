@@ -1,7 +1,7 @@
 import {AnchorProvider, Program} from "@coral-xyz/anchor";
 import {ConfirmOptions, PublicKey} from "@solana/web3.js";
 import {IDL, Tachyon as TachyonIDLType} from './idl';
-import {funcEval, funcLoad, initCos, initExp, initialize, initLn, initLog10, initSin,} from "./rpc";
+import {funcEval, funcLoad, funcLoadIx, initCos, initExp, initialize, initLn, initLog10, initSin,} from "./rpc";
 import {getFunctionData, getFunctions} from "./state";
 import {chunk, rustDecimalBytesToDecimalJs, sleep} from "./utils";
 import {Decimal} from "decimal.js";
@@ -90,11 +90,35 @@ export class TachyonClient {
         while (emptyIndices.length > 0){
             console.log(emptyIndices.length, "values remaining to load..")
 
-            for (let indices of chunk(emptyIndices, chunkSize)){
+            const ixsPerTx = 5
+
+            for (let indices of chunk(emptyIndices, chunkSize * ixsPerTx)){
                 console.log("\t #", indices[0])
 
-                await Promise.all(indices.map(async (index_num) => {
-                    const index = new Decimal(index_num)
+                await Promise.all(chunk(indices, ixsPerTx).map(async (chunk) => {
+                    let bulk = chunk.slice(0, -1)
+                    let lastVal = chunk.splice(-1)[0]
+
+                    let ixs = await Promise.all(bulk.map(async (index_num) => {
+                        const index = new Decimal(index_num)
+                        const x = (index.div(numValues.sub(new Decimal(1)))).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / (num_values - 1)) * (domainEnd - domainStart) + domainStart
+                        let y = fun(x)
+
+                        if (!y.isFinite()){
+                            y = new Decimal(0)
+                        }
+
+                        return await funcLoadIx(
+                            this.program,
+                            this.provider,
+                            fData,
+                            index_num,
+                            x,
+                            y
+                        )
+                    }))
+
+                    const index = new Decimal(lastVal)
                     const x = (index.div(numValues.sub(new Decimal(1)))).mul(domainEnd.sub(domainStart)).add(domainStart) // (index / (num_values - 1)) * (domainEnd - domainStart) + domainStart
                     let y = fun(x)
 
@@ -106,9 +130,10 @@ export class TachyonClient {
                         this.program,
                         this.provider,
                         fData,
-                        index_num,
+                        lastVal,
                         x,
-                        y
+                        y,
+                        ixs
                     )
                 }))
             }
