@@ -1,8 +1,11 @@
 [package]
 name = "tachyon"
 version = "0.5.2"
-description = "Created with Anchor"
 edition = "2021"
+license = "MIT"
+description = "Solana library for low compute-unit cost evaluation of transcendental functions"
+repository = "https://gitlab.com/dysonswap/tachyon"
+documentation = "https://gitlab.com/dysonswap/tachyon-test"
 
 [lib]
 crate-type = ["cdylib", "lib"]
