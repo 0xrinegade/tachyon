@@ -1,5 +1,5 @@
 [package]
-name = "tachyon"
+name = "tachyon-math-library"
 version = "0.5.2"
 edition = "2021"
 license = "MIT"
@@ -9,7 +9,7 @@ documentation = "https://gitlab.com/dysonswap/tachyon-test"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "tachyon"
+name = "tachyon_math_library"
 
 [features]
 no-entrypoint = []

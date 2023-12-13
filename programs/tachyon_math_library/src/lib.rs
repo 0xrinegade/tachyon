@@ -17,7 +17,7 @@ pub mod state;
 declare_id!("tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ");
 
 #[program]
-pub mod tachyon {
+pub mod tachyon_math_library {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {

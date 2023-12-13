@@ -1664,7 +1664,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tachyon"
+name = "tachyon-math-library"
 version = "0.5.2"
 dependencies = [
  "anchor-lang",

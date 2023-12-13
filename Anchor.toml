@@ -3,7 +3,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-tachyon = "tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ"
+tachyon_math_library = "tachANmkv5KXR1hSZKoVJ2s5wKrfdgFgb3638k6CvKQ"
 
 [registry]
 url = "https://anchor.projectserum.com"
